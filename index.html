@@ -214,7 +214,6 @@
   let confirmCallback = null;
   let dicePool = [];
 
-  // hold-to-repeat registry
   const holdState = {};
   let holdCounter = 0;
 
@@ -223,8 +222,8 @@
   }
 
   // ── HOLD-TO-REPEAT ───────────────────────────────────────────
-  // Phase 1 (0–5s): fire every 500ms, step 1
-  // Phase 2 (5s+) : fire every 100ms, step 10
+  // Phase 1 (0–5s): every 500ms, step 1
+  // Phase 2 (5s+) : every 500ms, step 10
   function startHold(btn, onTick) {
     const id = btn.dataset.holdId;
     stopHold(id);
@@ -233,16 +232,14 @@
     // Immediate first tick on press
     onTick(1);
 
-    const startTime = Date.now();
-
-    // Phase 1 interval: every 500ms
+    // Phase 1: step 1 every 500ms
     const phase1 = setInterval(() => onTick(1), 500);
 
-    // After 5s: clear phase1, start phase2
+    // After 5s: switch to step 10 every 500ms
     const switchTimer = setTimeout(() => {
       clearInterval(phase1);
       if (!holdState[id]) return;
-      const phase2 = setInterval(() => onTick(10), 100);
+      const phase2 = setInterval(() => onTick(10), 500);
       holdState[id].intervalId = phase2;
     }, 5000);
 
@@ -262,12 +259,10 @@
     const id = 'h' + (holdCounter++);
     btn.dataset.holdId = id;
 
-    // Touch events
     btn.addEventListener('touchstart', e => { e.preventDefault(); startHold(btn, onTick); }, { passive: false });
-    btn.addEventListener('touchend',   () => stopHold(id));
-    btn.addEventListener('touchcancel',() => stopHold(id));
+    btn.addEventListener('touchend',    () => stopHold(id));
+    btn.addEventListener('touchcancel', () => stopHold(id));
 
-    // Mouse events
     btn.addEventListener('mousedown', e => { e.preventDefault(); startHold(btn, onTick); });
     btn.addEventListener('mouseup',   () => stopHold(id));
     btn.addEventListener('mouseleave',() => stopHold(id));
@@ -444,12 +439,9 @@
       grid.appendChild(card);
     });
 
-    // Attach hold-to-repeat on life buttons
     state.players.forEach(p => {
-      const minusBtn = document.getElementById('lbtn-minus-' + p.id);
-      const plusBtn  = document.getElementById('lbtn-plus-'  + p.id);
-      attachHold(minusBtn, step => changeLife(p.id, -step));
-      attachHold(plusBtn,  step => changeLife(p.id, +step));
+      attachHold(document.getElementById('lbtn-minus-' + p.id), step => changeLife(p.id, -step));
+      attachHold(document.getElementById('lbtn-plus-'  + p.id), step => changeLife(p.id, +step));
     });
 
     grid.querySelectorAll('.cmdr-btn').forEach(b => b.onclick = () => changeCmdrDmg(+b.dataset.victim, +b.dataset.attacker, +b.dataset.delta));
@@ -509,7 +501,7 @@
       el.className = 'life-number' + (isLow ? ' low' : '') + (p.life <= 0 ? ' dead' : '');
     }
 
-    // Show delta flash only for single steps (not during fast hold)
+    // Show delta flash only for single steps
     if (Math.abs(delta) <= 1) {
       const de = document.getElementById('delta-' + id);
       if (de) {
@@ -537,8 +529,6 @@
   }
 
   // ── POISON ───────────────────────────────────────────────────
-  // Poison elimination does NOT change life total.
-  // Dropping back below 10 revives the player (if life > 0).
   function changePoison(id, delta) {
     const p = state.players[id];
     p.poison = Math.max(0, Math.min(10, p.poison + delta));
@@ -555,7 +545,6 @@
       });
     }
 
-    // Eliminate at 10 — life total unchanged
     if (lethal && !p.eliminated) {
       p.eliminated = true;
       document.getElementById('pcard-' + id)?.classList.add('eliminated');
@@ -565,7 +554,6 @@
       }
     }
 
-    // Revive when poison drops back below 10 (only if life is still positive)
     if (!lethal && p.eliminated && p.life > 0) {
       p.eliminated = false;
       document.getElementById('pcard-' + id)?.classList.remove('eliminated');

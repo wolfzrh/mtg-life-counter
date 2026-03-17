@@ -29,50 +29,21 @@
     input[type="text"]:focus { border-color: #c9a84c; }
 
     /* ── GAME SCREEN ── */
-    #screen-game {
-      padding: 0;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
+    #screen-game { padding: 0; overflow: hidden; display: flex; flex-direction: column; height: 100%; }
 
-    .game-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.5rem 0.6rem;
-      gap: 6px;
-      flex-shrink: 0;
-      border-bottom: 1px solid #1a1a22;
-    }
+    .game-header { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.6rem; gap: 6px; flex-shrink: 0; border-bottom: 1px solid #1a1a22; }
     .game-title { font-family: 'Cinzel', serif; font-size: 0.85rem; color: #c9a84c; font-weight: 600; white-space: nowrap; }
     .header-btns { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
     .icon-btn { background: #12121a; border: 1px solid #2a2218; border-radius: 6px; color: #7a6a50; font-family: 'Cinzel', serif; font-size: 0.6rem; padding: 0.35rem 0.55rem; cursor: pointer; letter-spacing: 0.04em; touch-action: manipulation; white-space: nowrap; min-height: 32px; display: flex; align-items: center; transition: all 0.15s; }
     .icon-btn:hover, .icon-btn:active { border-color: #c9a84c; color: #c9a84c; }
     .icon-btn.danger:hover, .icon-btn.danger:active { border-color: #e05050; color: #e05050; }
 
-    /* toggle row */
-    .toggle-row {
-      display: flex;
-      gap: 5px;
-      padding: 0.4rem 0.6rem;
-      border-bottom: 1px solid #1a1a22;
-      flex-shrink: 0;
-    }
+    .toggle-row { display: flex; gap: 5px; padding: 0.4rem 0.6rem; border-bottom: 1px solid #1a1a22; flex-shrink: 0; }
     .toggle-btn { font-family: 'Cinzel', serif; font-size: 0.58rem; font-weight: 600; letter-spacing: 0.08em; border: 1px solid #2a2218; border-radius: 20px; background: #12121a; color: #5a5050; padding: 0.3rem 0.7rem; cursor: pointer; touch-action: manipulation; transition: all 0.15s; text-transform: uppercase; }
     .toggle-btn.on { border-color: #c9a84c55; color: #c9a84c; background: #1a1500; }
     .toggle-btn.on.green { border-color: #a0d84055; color: #a0d840; background: #141a00; }
 
-    /* players grid fills remaining space */
-    .players-area {
-      flex: 1;
-      overflow: hidden;
-      padding: 0.5rem;
-      display: grid;
-      gap: 5px;
-      min-height: 0;
-    }
+    .players-area { flex: 1; overflow: hidden; padding: 0.5rem; display: grid; gap: 5px; min-height: 0; }
 
     /* PLAYER CARD */
     .player-card { border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); padding: 0.5rem 0.65rem; position: relative; overflow: hidden; display: flex; flex-direction: column; min-height: 0; }
@@ -84,10 +55,9 @@
     .player-name { font-family: 'Cinzel', serif; font-size: clamp(0.65rem, 2.2vw, 0.85rem); font-weight: 600; text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
     .elim-badge { font-family: 'Cinzel', serif; font-size: 0.5rem; background: #3a0a0a; border: 1px solid #7a1a1a; color: #e05050; border-radius: 4px; padding: 1px 4px; }
 
-    /* life row stretches to fill available card height */
     .life-row { display: flex; align-items: center; justify-content: center; gap: clamp(6px, 2.5vw, 14px); flex: 1; min-height: 0; position: relative; }
-    .life-btn { width: clamp(36px, 10vw, 48px); height: clamp(36px, 10vw, 48px); border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4); color: #fff; font-size: clamp(1.2rem, 4vw, 1.6rem); font-weight: 300; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; touch-action: manipulation; user-select: none; flex-shrink: 0; transition: all 0.1s; }
-    .life-btn:active { background: rgba(255,255,255,0.2); transform: scale(0.88); }
+    .life-btn { width: clamp(36px, 10vw, 48px); height: clamp(36px, 10vw, 48px); border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4); color: #fff; font-size: clamp(1.2rem, 4vw, 1.6rem); font-weight: 300; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; touch-action: manipulation; user-select: none; flex-shrink: 0; transition: background 0.1s; }
+    .life-btn:active, .life-btn.held { background: rgba(255,255,255,0.22); }
     .life-number { font-family: 'Cinzel', serif; font-size: clamp(2rem, 8vw, 3rem); font-weight: 900; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.9); min-width: clamp(60px, 18vw, 95px); text-align: center; line-height: 1; }
     .life-number.low { color: #e05050; animation: pulse-red 1.5s infinite; }
     .life-number.dead { color: #7a3a3a; }
@@ -98,13 +68,13 @@
     .delta-positive { color: #5dca8a; }
     .delta-negative { color: #e05050; }
 
-    /* expandable sections */
+    /* EXPANDABLE SECTIONS */
     .expand-section { overflow: hidden; transition: max-height 0.25s ease, opacity 0.2s ease, margin-top 0.2s; max-height: 0; opacity: 0; margin-top: 0; flex-shrink: 0; }
     .expand-section.open { max-height: 120px; opacity: 1; margin-top: 0.3rem; }
     .section-inner { padding-top: 0.35rem; border-top: 1px solid rgba(255,255,255,0.08); }
     .section-label { font-family: 'Cinzel', serif; font-size: 0.5rem; letter-spacing: 0.12em; color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 0.25rem; }
 
-    /* commander */
+    /* COMMANDER */
     .cmdr-row { display: flex; gap: 4px; flex-wrap: wrap; }
     .cmdr-chip { display: flex; align-items: center; gap: 2px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2px 5px 2px 4px; }
     .cmdr-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
@@ -112,17 +82,17 @@
     .cmdr-btn { width: 20px; height: 20px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.8); font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; touch-action: manipulation; }
     .cmdr-btn:active { background: rgba(255,255,255,0.22); }
 
-    /* poison */
+    /* POISON */
     .poison-row { display: flex; align-items: center; gap: 8px; }
     .poison-controls { display: flex; align-items: center; gap: 5px; }
     .poison-btn { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(180,230,80,0.3); background: rgba(0,0,0,0.4); color: rgba(180,230,80,0.8); font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; touch-action: manipulation; }
     .poison-btn:active { background: rgba(180,230,80,0.15); }
     .poison-count { font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 900; color: #a0d840; min-width: 18px; text-align: center; }
-    .poison-count.poisoned { color: #c0f040; animation: pulse-poison 1.5s infinite; }
-    @keyframes pulse-poison { 0%,100% { text-shadow: none; } 50% { text-shadow: 0 0 10px rgba(160,216,64,0.7); } }
+    .poison-count.poisoned { color: #e05050; animation: pulse-red 1.5s infinite; }
     .poison-pips { display: flex; gap: 3px; align-items: center; flex-wrap: wrap; }
     .poison-pip { width: 7px; height: 7px; border-radius: 50%; background: #3a3a2a; border: 1px solid #5a5a3a; }
     .poison-pip.filled { background: #a0d840; border-color: #c0f040; }
+    .poison-pip.filled.lethal { background: #e05050; border-color: #ff7070; }
 
     /* MODALS */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 100; align-items: flex-end; justify-content: center; }
@@ -244,8 +214,63 @@
   let confirmCallback = null;
   let dicePool = [];
 
+  // hold-to-repeat registry
+  const holdState = {};
+  let holdCounter = 0;
+
   function escHtml(s) {
     return s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  // ── HOLD-TO-REPEAT ───────────────────────────────────────────
+  // Phase 1 (0–5s): fire every 500ms, step 1
+  // Phase 2 (5s+) : fire every 100ms, step 10
+  function startHold(btn, onTick) {
+    const id = btn.dataset.holdId;
+    stopHold(id);
+    btn.classList.add('held');
+
+    // Immediate first tick on press
+    onTick(1);
+
+    const startTime = Date.now();
+
+    // Phase 1 interval: every 500ms
+    const phase1 = setInterval(() => onTick(1), 500);
+
+    // After 5s: clear phase1, start phase2
+    const switchTimer = setTimeout(() => {
+      clearInterval(phase1);
+      if (!holdState[id]) return;
+      const phase2 = setInterval(() => onTick(10), 100);
+      holdState[id].intervalId = phase2;
+    }, 5000);
+
+    holdState[id] = { intervalId: phase1, timeoutId: switchTimer, btn };
+  }
+
+  function stopHold(id) {
+    if (holdState[id]) {
+      clearInterval(holdState[id].intervalId);
+      clearTimeout(holdState[id].timeoutId);
+      holdState[id].btn?.classList.remove('held');
+      delete holdState[id];
+    }
+  }
+
+  function attachHold(btn, onTick) {
+    const id = 'h' + (holdCounter++);
+    btn.dataset.holdId = id;
+
+    // Touch events
+    btn.addEventListener('touchstart', e => { e.preventDefault(); startHold(btn, onTick); }, { passive: false });
+    btn.addEventListener('touchend',   () => stopHold(id));
+    btn.addEventListener('touchcancel',() => stopHold(id));
+
+    // Mouse events
+    btn.addEventListener('mousedown', e => { e.preventDefault(); startHold(btn, onTick); });
+    btn.addEventListener('mouseup',   () => stopHold(id));
+    btn.addEventListener('mouseleave',() => stopHold(id));
   }
 
   // ── CONFIRM MODAL ────────────────────────────────────────────
@@ -329,49 +354,36 @@
     document.getElementById('screen-setup').classList.remove('active');
     document.getElementById('screen-game').classList.add('active');
 
-    // toggles — reset state
     ui.showCmdr = false;
     ui.showPoison = false;
-    const tCmdr = document.getElementById('toggle-cmdr');
-    const tPoison = document.getElementById('toggle-poison');
-    tCmdr.classList.remove('on');
-    tPoison.classList.remove('on');
+    const tC = document.getElementById('toggle-cmdr');
+    const tP = document.getElementById('toggle-poison');
+    tC.classList.remove('on');
+    tP.classList.remove('on');
 
-    tCmdr.onclick = () => {
-      ui.showCmdr = !ui.showCmdr;
-      tCmdr.classList.toggle('on', ui.showCmdr);
-      updateExpandSections();
-    };
-    tPoison.onclick = () => {
-      ui.showPoison = !ui.showPoison;
-      tPoison.classList.toggle('on', ui.showPoison);
-      updateExpandSections();
-    };
+    tC.onclick = () => { ui.showCmdr = !ui.showCmdr; tC.classList.toggle('on', ui.showCmdr); updateExpandSections(); };
+    tP.onclick = () => { ui.showPoison = !ui.showPoison; tP.classList.toggle('on', ui.showPoison); updateExpandSections(); };
 
     document.getElementById('dice-btn').onclick = () => openDiceModal(state.players.map(p => p.id));
 
-    document.getElementById('reset-btn').onclick = () => {
-      showConfirm({
-        icon: '↺', title: 'Reset Life Totals?', titleColor: '#c9a84c',
-        text: 'All life totals, poison counters and commander damage will be reset to their starting values.',
-        okLabel: 'Reset', okClass: 'primary',
-        onOk: () => {
-          state.players.forEach(p => {
-            p.life = p.startingLife; p.eliminated = false; p.poison = 0;
-            Object.keys(p.cmdDmg).forEach(k => p.cmdDmg[k] = 0);
-          });
-          renderGame();
-        }
-      });
-    };
+    document.getElementById('reset-btn').onclick = () => showConfirm({
+      icon: '↺', title: 'Reset Life Totals?', titleColor: '#c9a84c',
+      text: 'All life totals, poison counters and commander damage will be reset to their starting values.',
+      okLabel: 'Reset', okClass: 'primary',
+      onOk: () => {
+        state.players.forEach(p => {
+          p.life = p.startingLife; p.eliminated = false; p.poison = 0;
+          Object.keys(p.cmdDmg).forEach(k => p.cmdDmg[k] = 0);
+        });
+        renderGame();
+      }
+    });
 
-    document.getElementById('end-btn').onclick = () => {
-      showConfirm({
-        icon: '☠', title: 'End the Game?', titleColor: '#e05050',
-        text: 'All progress will be lost and you will return to the front page.',
-        okLabel: 'End Game', okClass: 'danger', onOk: endGame
-      });
-    };
+    document.getElementById('end-btn').onclick = () => showConfirm({
+      icon: '☠', title: 'End the Game?', titleColor: '#e05050',
+      text: 'All progress will be lost and you will return to the front page.',
+      okLabel: 'End Game', okClass: 'danger', onOk: endGame
+    });
 
     renderGame();
   }
@@ -386,7 +398,7 @@
     renderNameInputs();
   }
 
-  // ── GRID LAYOUT ──────────────────────────────────────────────
+  // ── GRID ─────────────────────────────────────────────────────
   function getGridStyle(n) {
     if (n <= 2) return { cols: '1fr', rows: `repeat(${n}, 1fr)` };
     if (n <= 4) return { cols: '1fr 1fr', rows: `repeat(${Math.ceil(n / 2)}, 1fr)` };
@@ -417,9 +429,9 @@
           ${p.eliminated ? '<div class="elim-badge">OUT</div>' : ''}
         </div>
         <div class="life-row">
-          <button class="life-btn" data-id="${p.id}" data-delta="-1" style="border-color:${col.accent}66">−</button>
+          <button class="life-btn" id="lbtn-minus-${p.id}" style="border-color:${col.accent}66">−</button>
           <div class="life-number${isLow ? ' low' : ''}${p.life <= 0 ? ' dead' : ''}" id="life-${p.id}">${p.life}</div>
-          <button class="life-btn" data-id="${p.id}" data-delta="1" style="border-color:${col.accent}66">+</button>
+          <button class="life-btn" id="lbtn-plus-${p.id}" style="border-color:${col.accent}66">+</button>
           <div class="delta-flash" id="delta-${p.id}"></div>
         </div>
         <div class="expand-section${ui.showCmdr ? ' open' : ''}" id="cmdr-sec-${p.id}">
@@ -432,7 +444,14 @@
       grid.appendChild(card);
     });
 
-    grid.querySelectorAll('.life-btn').forEach(b => b.onclick = () => changeLife(+b.dataset.id, +b.dataset.delta));
+    // Attach hold-to-repeat on life buttons
+    state.players.forEach(p => {
+      const minusBtn = document.getElementById('lbtn-minus-' + p.id);
+      const plusBtn  = document.getElementById('lbtn-plus-'  + p.id);
+      attachHold(minusBtn, step => changeLife(p.id, -step));
+      attachHold(plusBtn,  step => changeLife(p.id, +step));
+    });
+
     grid.querySelectorAll('.cmdr-btn').forEach(b => b.onclick = () => changeCmdrDmg(+b.dataset.victim, +b.dataset.attacker, +b.dataset.delta));
     grid.querySelectorAll('.poison-btn').forEach(b => b.onclick = () => changePoison(+b.dataset.id, +b.dataset.delta));
   }
@@ -460,15 +479,17 @@
   }
 
   function renderPoisonInner(p) {
-    const pips = Array.from({ length: 10 }, (_, i) =>
-      `<div class="poison-pip${i < p.poison ? ' filled' : ''}"></div>`
-    ).join('');
+    const lethal = p.poison >= 10;
+    const pips = Array.from({ length: 10 }, (_, i) => {
+      const filled = i < p.poison;
+      return `<div class="poison-pip${filled ? ' filled' : ''}${filled && lethal ? ' lethal' : ''}"></div>`;
+    }).join('');
     return `<div class="section-inner">
       <div class="section-label">Poison</div>
       <div class="poison-row">
         <div class="poison-controls">
           <button class="poison-btn" data-id="${p.id}" data-delta="-1">−</button>
-          <div class="poison-count${p.poison >= 10 ? ' poisoned' : ''}" id="poison-${p.id}">${p.poison}</div>
+          <div class="poison-count${lethal ? ' poisoned' : ''}" id="poison-${p.id}">${p.poison}</div>
           <button class="poison-btn" data-id="${p.id}" data-delta="1">+</button>
         </div>
         <div class="poison-pips" id="poison-pips-${p.id}">${pips}</div>
@@ -488,13 +509,16 @@
       el.className = 'life-number' + (isLow ? ' low' : '') + (p.life <= 0 ? ' dead' : '');
     }
 
-    const de = document.getElementById('delta-' + id);
-    if (de) {
-      de.className = 'delta-flash ' + (delta > 0 ? 'delta-positive' : 'delta-negative');
-      de.textContent = (delta > 0 ? '+' : '') + delta;
-      void de.offsetWidth;
-      de.classList.add('show');
-      setTimeout(() => de.classList.remove('show'), 1200);
+    // Show delta flash only for single steps (not during fast hold)
+    if (Math.abs(delta) <= 1) {
+      const de = document.getElementById('delta-' + id);
+      if (de) {
+        de.className = 'delta-flash ' + (delta > 0 ? 'delta-positive' : 'delta-negative');
+        de.textContent = (delta > 0 ? '+' : '') + delta;
+        void de.offsetWidth;
+        de.classList.add('show');
+        setTimeout(() => de.classList.remove('show'), 1200);
+      }
     }
 
     if (p.life <= 0 && !p.eliminated) {
@@ -502,14 +526,10 @@
       document.getElementById('pcard-' + id)?.classList.add('eliminated');
       const top = document.getElementById('pcard-' + id)?.querySelector('.player-top');
       if (top && !top.querySelector('.elim-badge')) {
-        const b = document.createElement('div');
-        b.className = 'elim-badge';
-        b.textContent = 'OUT';
-        top.appendChild(b);
+        const b = document.createElement('div'); b.className = 'elim-badge'; b.textContent = 'OUT'; top.appendChild(b);
       }
     }
-
-    if (p.life > 0 && p.eliminated) {
+    if (p.life > 0 && p.eliminated && p.poison < 10) {
       p.eliminated = false;
       document.getElementById('pcard-' + id)?.classList.remove('eliminated');
       document.getElementById('pcard-' + id)?.querySelector('.elim-badge')?.remove();
@@ -517,18 +537,40 @@
   }
 
   // ── POISON ───────────────────────────────────────────────────
+  // Poison elimination does NOT change life total.
+  // Dropping back below 10 revives the player (if life > 0).
   function changePoison(id, delta) {
     const p = state.players[id];
-    p.poison = Math.max(0, p.poison + delta);
+    p.poison = Math.max(0, Math.min(10, p.poison + delta));
+    const lethal = p.poison >= 10;
 
     const el = document.getElementById('poison-' + id);
-    if (el) { el.textContent = p.poison; el.className = 'poison-count' + (p.poison >= 10 ? ' poisoned' : ''); }
+    if (el) { el.textContent = p.poison; el.className = 'poison-count' + (lethal ? ' poisoned' : ''); }
 
-    document.getElementById('poison-pips-' + id)?.querySelectorAll('.poison-pip').forEach((pip, i) => {
-      pip.classList.toggle('filled', i < p.poison);
-    });
+    const pipsEl = document.getElementById('poison-pips-' + id);
+    if (pipsEl) {
+      pipsEl.querySelectorAll('.poison-pip').forEach((pip, i) => {
+        const filled = i < p.poison;
+        pip.className = 'poison-pip' + (filled ? ' filled' : '') + (filled && lethal ? ' lethal' : '');
+      });
+    }
 
-    if (p.poison >= 10 && !p.eliminated) changeLife(id, -9999);
+    // Eliminate at 10 — life total unchanged
+    if (lethal && !p.eliminated) {
+      p.eliminated = true;
+      document.getElementById('pcard-' + id)?.classList.add('eliminated');
+      const top = document.getElementById('pcard-' + id)?.querySelector('.player-top');
+      if (top && !top.querySelector('.elim-badge')) {
+        const b = document.createElement('div'); b.className = 'elim-badge'; b.textContent = 'OUT'; top.appendChild(b);
+      }
+    }
+
+    // Revive when poison drops back below 10 (only if life is still positive)
+    if (!lethal && p.eliminated && p.life > 0) {
+      p.eliminated = false;
+      document.getElementById('pcard-' + id)?.classList.remove('eliminated');
+      document.getElementById('pcard-' + id)?.querySelector('.elim-badge')?.remove();
+    }
   }
 
   // ── COMMANDER DAMAGE ─────────────────────────────────────────
@@ -555,7 +597,7 @@
     }).join('');
 
     const winnerEl = document.getElementById('winner-announce');
-    const rollBtn = document.getElementById('dice-roll-btn');
+    const rollBtn  = document.getElementById('dice-roll-btn');
     winnerEl.style.display = 'none';
     rollBtn.textContent = isTie ? 'Roll Tiebreaker' : 'Roll All';
     document.getElementById('dice-modal').classList.add('open');
@@ -566,19 +608,13 @@
       dicePool.forEach((pid, i) => {
         const el = document.getElementById('dv-' + pid);
         const iv = setInterval(() => { el.textContent = Math.ceil(Math.random() * 20); }, 60);
-        setTimeout(() => {
-          clearInterval(iv);
-          rolls[pid] = Math.ceil(Math.random() * 20);
-          el.textContent = rolls[pid];
-        }, 600 + i * 80);
+        setTimeout(() => { clearInterval(iv); rolls[pid] = Math.ceil(Math.random() * 20); el.textContent = rolls[pid]; }, 600 + i * 80);
       });
-
       setTimeout(() => {
         let max = -1;
         dicePool.forEach(pid => { if (rolls[pid] > max) max = rolls[pid]; });
         const winners = dicePool.filter(pid => rolls[pid] === max);
         winnerEl.style.display = 'block';
-
         if (winners.length === 1) {
           const w = state.players[winners[0]];
           winnerEl.innerHTML = `<span style="color:${COLORS[w.id].accent}">${escHtml(w.name)}</span> goes first with a <strong>${max}</strong>!`;

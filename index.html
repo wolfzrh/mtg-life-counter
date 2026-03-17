@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>MTG Life Counter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Crimson Pro', serif; color: #e8dcc8; min-height: 100vh; background: #0a0a0f; }
+
+    .screen { display: none; padding: 1rem; }
+    .screen.active { display: block; }
+
+    h1 { font-family: 'Cinzel', serif; font-size: clamp(1.6rem, 6vw, 2.2rem); font-weight: 900; text-align: center; color: #c9a84c; letter-spacing: 0.08em; margin-bottom: 0.2rem; }
+    .subtitle { text-align: center; font-size: clamp(0.85rem, 3vw, 1rem); color: #7a6a50; font-style: italic; margin-bottom: 1.5rem; letter-spacing: 0.05em; }
+
+    .config-card { background: #12121a; border: 1px solid #2a2218; border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: 1rem; }
+    .config-label { font-family: 'Cinzel', serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; color: #7a6a50; text-transform: uppercase; margin-bottom: 0.7rem; }
+    .btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .btn { font-family: 'Cinzel', serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em; border: 1px solid #3a2e1e; border-radius: 8px; background: #1a1510; color: #9a8a6a; padding: 0.55rem 0.9rem; cursor: pointer; transition: all 0.15s; touch-action: manipulation; }
+    .btn:hover, .btn:active { border-color: #c9a84c; color: #c9a84c; }
+    .btn.selected { background: #1e1800; border-color: #c9a84c; color: #c9a84c; box-shadow: inset 0 0 20px rgba(201,168,76,0.1); }
+
+    .btn-primary { background: #1e1800; border: 1px solid #c9a84c; color: #c9a84c; font-size: 1rem; padding: 0.9rem 2rem; width: 100%; margin-top: 0.4rem; border-radius: 8px; cursor: pointer; font-family: 'Cinzel', serif; font-weight: 600; letter-spacing: 0.1em; transition: all 0.2s; touch-action: manipulation; }
+    .btn-primary:active { opacity: 0.8; }
+
+    .name-input-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .color-dot { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.2); }
+    input[type="text"] { background: #0e0e16; border: 1px solid #2a2218; border-radius: 6px; color: #e8dcc8; font-family: 'Crimson Pro', serif; font-size: 1rem; padding: 0.5rem 0.8rem; flex: 1; outline: none; transition: border-color 0.2s; min-height: 44px; }
+    input[type="text"]:focus { border-color: #c9a84c; }
+
+    /* GAME SCREEN */
+    #screen-game { padding: 0.6rem; }
+    .game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.7rem; padding: 0 0.2rem; gap: 8px; }
+    .game-title { font-family: 'Cinzel', serif; font-size: 0.95rem; color: #c9a84c; font-weight: 600; white-space: nowrap; }
+    .header-btns { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+    .icon-btn { background: #12121a; border: 1px solid #2a2218; border-radius: 6px; color: #7a6a50; font-family: 'Cinzel', serif; font-size: 0.65rem; padding: 0.4rem 0.6rem; cursor: pointer; letter-spacing: 0.04em; transition: all 0.15s; touch-action: manipulation; white-space: nowrap; min-height: 36px; display: flex; align-items: center; }
+    .icon-btn:hover, .icon-btn:active { border-color: #c9a84c; color: #c9a84c; }
+    .icon-btn.danger:hover, .icon-btn.danger:active { border-color: #e05050; color: #e05050; }
+
+    .players-grid { display: grid; gap: 8px; }
+
+    .player-card { border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); padding: 0.75rem 0.85rem; position: relative; overflow: hidden; }
+    .player-card.eliminated { opacity: 0.4; filter: grayscale(0.8); }
+    .player-card::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.45); z-index: 0; }
+    .player-card > * { position: relative; z-index: 1; }
+
+    .player-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+    .player-name { font-family: 'Cinzel', serif; font-size: clamp(0.75rem, 2.8vw, 0.95rem); font-weight: 600; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
+    .elim-badge { font-family: 'Cinzel', serif; font-size: 0.55rem; background: #3a0a0a; border: 1px solid #7a1a1a; color: #e05050; border-radius: 4px; padding: 2px 5px; letter-spacing: 0.06em; }
+
+    .life-row { display: flex; align-items: center; justify-content: center; gap: clamp(8px, 3vw, 16px); margin: 0.2rem 0; position: relative; }
+
+    .life-btn { width: clamp(44px, 12vw, 54px); height: clamp(44px, 12vw, 54px); border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4); color: #fff; font-size: clamp(1.4rem, 5vw, 1.8rem); font-weight: 300; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.12s; line-height: 1; touch-action: manipulation; user-select: none; }
+    .life-btn:active { background: rgba(255,255,255,0.2); transform: scale(0.88); }
+
+    .life-number { font-family: 'Cinzel', serif; font-size: clamp(2.4rem, 9vw, 3.4rem); font-weight: 900; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.9); min-width: clamp(70px, 20vw, 110px); text-align: center; line-height: 1; }
+    .life-number.low { color: #e05050; animation: pulse-red 1.5s infinite; }
+    @keyframes pulse-red { 0%,100% { text-shadow: 0 2px 10px rgba(0,0,0,0.9); } 50% { text-shadow: 0 0 20px rgba(224,80,80,0.6); } }
+
+    .delta-flash { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 600; opacity: 0; pointer-events: none; }
+    .delta-flash.show { animation: delta-anim 1.2s ease-out forwards; }
+    @keyframes delta-anim { 0% { opacity: 1; transform: translateY(-50%); } 100% { opacity: 0; transform: translateY(calc(-50% - 28px)); } }
+    .delta-positive { color: #5dca8a; }
+    .delta-negative { color: #e05050; }
+
+    .cmdr-section { margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.1); }
+    .cmdr-label { font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.12em; color: rgba(255,255,255,0.45); margin-bottom: 0.35rem; text-transform: uppercase; }
+    .cmdr-row { display: flex; gap: 5px; flex-wrap: wrap; }
+    .cmdr-chip { display: flex; align-items: center; gap: 3px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 3px 6px 3px 5px; }
+    .cmdr-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .cmdr-dmg { font-family: 'Cinzel', serif; font-size: 0.8rem; color: #fff; min-width: 14px; text-align: center; }
+    .cmdr-btn { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; touch-action: manipulation; transition: background 0.12s; }
+    .cmdr-btn:active { background: rgba(255,255,255,0.25); }
+
+    /* MODALS */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 100; align-items: flex-end; justify-content: center; padding-bottom: env(safe-area-inset-bottom, 0); }
+    @media (min-width: 480px) { .modal-overlay { align-items: center; } }
+    .modal-overlay.open { display: flex; }
+    .modal { background: #12121a; border: 1px solid #3a2e1e; border-radius: 16px 16px 0 0; padding: 1.4rem 1.2rem 1.8rem; width: 100%; max-width: 520px; max-height: 88vh; overflow-y: auto; }
+    @media (min-width: 480px) { .modal { border-radius: 16px; padding: 1.5rem; max-height: 80vh; } }
+
+    .modal-title { font-family: 'Cinzel', serif; font-size: 1.05rem; font-weight: 700; color: #c9a84c; margin-bottom: 1.1rem; text-align: center; letter-spacing: 0.08em; }
+    .dice-results { display: flex; flex-direction: column; gap: 7px; margin-bottom: 1.1rem; }
+    .dice-row { display: flex; align-items: center; justify-content: space-between; background: #0e0e16; border-radius: 8px; padding: 0.5rem 1rem; border: 1px solid #2a2218; }
+    .dice-name { font-family: 'Cinzel', serif; font-size: 0.85rem; font-weight: 600; }
+    .dice-val { font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 900; }
+    .winner-announce { text-align: center; font-family: 'Cinzel', serif; font-size: 0.9rem; color: #c9a84c; padding: 0.75rem; border: 1px solid #3a2e1e; border-radius: 8px; background: #1a1400; margin-bottom: 1rem; line-height: 1.5; }
+
+    .step-btns { display: flex; gap: 8px; }
+    .step-btn { flex: 1; font-family: 'Cinzel', serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em; border-radius: 8px; padding: 0.75rem; cursor: pointer; transition: all 0.15s; touch-action: manipulation; min-height: 48px; }
+    .step-btn.secondary { background: transparent; border: 1px solid #3a2e1e; color: #7a6a50; }
+    .step-btn.secondary:active { border-color: #c9a84c; color: #c9a84c; }
+    .step-btn.primary { background: #1e1800; border: 1px solid #c9a84c; color: #c9a84c; }
+    .step-btn.primary:active { opacity: 0.8; }
+    .step-btn.danger { background: #1a0808; border: 1px solid #e05050; color: #e05050; }
+    .step-btn.danger:active { opacity: 0.8; }
+
+    .warn-icon { font-size: 2rem; text-align: center; margin-bottom: 0.7rem; }
+    .warn-text { text-align: center; font-size: 0.95rem; color: #b09070; line-height: 1.6; margin-bottom: 1.2rem; font-style: italic; }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <!-- SETUP SCREEN -->
+  <div id="screen-setup" class="screen active">
+    <h1>MTG</h1>
+    <p class="subtitle">Life Counter</p>
+    <div class="config-card">
+      <div class="config-label">Number of Players</div>
+      <div class="btn-group" id="player-count-btns">
+        <button class="btn selected" data-val="2">2</button>
+        <button class="btn" data-val="3">3</button>
+        <button class="btn" data-val="4">4</button>
+        <button class="btn" data-val="5">5</button>
+        <button class="btn" data-val="6">6</button>
+        <button class="btn" data-val="7">7</button>
+        <button class="btn" data-val="8">8</button>
+      </div>
+    </div>
+    <div class="config-card">
+      <div class="config-label">Starting Life</div>
+      <div class="btn-group" id="starting-life-btns">
+        <button class="btn selected" data-val="20">20 — Standard</button>
+        <button class="btn" data-val="40">40 — Commander</button>
+      </div>
+    </div>
+    <div class="config-card">
+      <div class="config-label">Player Names</div>
+      <div id="name-inputs"></div>
+    </div>
+    <button class="btn-primary" id="start-btn">Begin the Battle</button>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="screen-game" class="screen">
+    <div class="game-header">
+      <div class="game-title">⚔ Arena</div>
+      <div class="header-btns">
+        <button class="icon-btn" id="dice-btn">Roll Dice</button>
+        <button class="icon-btn" id="reset-btn">Reset</button>
+        <button class="icon-btn danger" id="end-btn">End Game</button>
+      </div>
+    </div>
+    <div class="players-grid" id="players-grid"></div>
+  </div>
+</div>
+
+<!-- DICE MODAL -->
+<div class="modal-overlay" id="dice-modal">
+  <div class="modal">
+    <div class="modal-title">Roll to Decide First Turn</div>
+    <div class="dice-results" id="dice-results"></div>
+    <div class="winner-announce" id="winner-announce" style="display:none;"></div>
+    <div class="step-btns">
+      <button class="step-btn secondary" id="dice-close-btn">Close</button>
+      <button class="step-btn primary" id="dice-roll-btn">Roll All</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL (shared for Reset + End Game) -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal">
+    <div class="warn-icon" id="confirm-icon">☠</div>
+    <div class="modal-title" id="confirm-title">End the Game?</div>
+    <div class="warn-text" id="confirm-text"></div>
+    <div class="step-btns">
+      <button class="step-btn secondary" id="confirm-cancel-btn">Keep Playing</button>
+      <button class="step-btn danger" id="confirm-ok-btn">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const COLORS = [
+    { bg: '#1a2a4a', accent: '#4a8fff' },
+    { bg: '#2a1a1a', accent: '#e05050' },
+    { bg: '#1a2a1a', accent: '#5dca8a' },
+    { bg: '#2a2018', accent: '#f0b040' },
+    { bg: '#251a35', accent: '#b07aff' },
+    { bg: '#1a2a2a', accent: '#40d4d4' },
+    { bg: '#2a1a28', accent: '#e870c0' },
+    { bg: '#252018', accent: '#f09050' }
+  ];
+
+  let cfg = { players: 2, life: 20 };
+  let state = { players: [] };
+  let confirmCallback = null;
+
+  function escHtml(s) {
+    return s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  // ── CONFIRM MODAL ──────────────────────────────────────────────
+  function showConfirm({ icon, title, titleColor, text, okLabel, okClass, onOk }) {
+    document.getElementById('confirm-icon').textContent = icon;
+    document.getElementById('confirm-title').textContent = title;
+    document.getElementById('confirm-title').style.color = titleColor || '#c9a84c';
+    document.getElementById('confirm-text').textContent = text;
+    const okBtn = document.getElementById('confirm-ok-btn');
+    okBtn.textContent = okLabel;
+    okBtn.className = 'step-btn ' + (okClass || 'danger');
+    confirmCallback = onOk;
+    document.getElementById('confirm-modal').classList.add('open');
+  }
+
+  document.getElementById('confirm-cancel-btn').addEventListener('click', () => {
+    document.getElementById('confirm-modal').classList.remove('open');
+    confirmCallback = null;
+  });
+
+  document.getElementById('confirm-ok-btn').addEventListener('click', () => {
+    document.getElementById('confirm-modal').classList.remove('open');
+    if (confirmCallback) { confirmCallback(); confirmCallback = null; }
+  });
+
+  // ── SETUP SCREEN ───────────────────────────────────────────────
+  function initSetup() {
+    document.querySelectorAll('#player-count-btns .btn').forEach(b => {
+      b.addEventListener('click', () => {
+        document.querySelectorAll('#player-count-btns .btn').forEach(x => x.classList.remove('selected'));
+        b.classList.add('selected');
+        cfg.players = parseInt(b.dataset.val);
+        renderNameInputs();
+      });
+    });
+
+    document.querySelectorAll('#starting-life-btns .btn').forEach(b => {
+      b.addEventListener('click', () => {
+        document.querySelectorAll('#starting-life-btns .btn').forEach(x => x.classList.remove('selected'));
+        b.classList.add('selected');
+        cfg.life = parseInt(b.dataset.val);
+      });
+    });
+
+    document.getElementById('start-btn').addEventListener('click', startGame);
+    renderNameInputs();
+  }
+
+  function renderNameInputs() {
+    const container = document.getElementById('name-inputs');
+    const current = Array.from(container.querySelectorAll('input')).map(i => i.value);
+    container.innerHTML = '';
+    for (let i = 0; i < cfg.players; i++) {
+      const row = document.createElement('div');
+      row.className = 'name-input-row';
+      const dot = document.createElement('div');
+      dot.className = 'color-dot';
+      dot.style.background = COLORS[i].accent;
+      const inp = document.createElement('input');
+      inp.type = 'text';
+      inp.placeholder = 'Player ' + (i + 1);
+      inp.value = current[i] || '';
+      row.appendChild(dot);
+      row.appendChild(inp);
+      container.appendChild(row);
+    }
+  }
+
+  // ── START GAME ─────────────────────────────────────────────────
+  function startGame() {
+    const inputs = document.querySelectorAll('#name-inputs input');
+    state.players = Array.from({ length: cfg.players }, (_, i) => ({
+      id: i,
+      name: inputs[i]?.value.trim() || ('Player ' + (i + 1)),
+      life: cfg.life,
+      startingLife: cfg.life,
+      eliminated: false,
+      cmdDmg: {}
+    }));
+    state.players.forEach(p => {
+      state.players.forEach(op => { if (op.id !== p.id) p.cmdDmg[op.id] = 0; });
+    });
+
+    document.getElementById('screen-setup').classList.remove('active');
+    document.getElementById('screen-game').classList.add('active');
+    renderGame();
+
+    document.getElementById('dice-btn').onclick = openDiceModal;
+
+    document.getElementById('reset-btn').onclick = () => {
+      showConfirm({
+        icon: '↺',
+        title: 'Reset Life Totals?',
+        titleColor: '#c9a84c',
+        text: 'All life totals and commander damage will be reset to their starting values.',
+        okLabel: 'Reset',
+        okClass: 'primary',
+        onOk: () => {
+          state.players.forEach(p => {
+            p.life = p.startingLife;
+            p.eliminated = false;
+            Object.keys(p.cmdDmg).forEach(k => p.cmdDmg[k] = 0);
+          });
+          renderGame();
+        }
+      });
+    };
+
+    document.getElementById('end-btn').onclick = () => {
+      showConfirm({
+        icon: '☠',
+        title: 'End the Game?',
+        titleColor: '#e05050',
+        text: 'All life totals and commander damage will be lost. The battlefield will be cleared and you will return to the front page.',
+        okLabel: 'End Game',
+        okClass: 'danger',
+        onOk: endGame
+      });
+    };
+  }
+
+  function endGame() {
+    state.players = [];
+    cfg = { players: 2, life: 20 };
+    document.getElementById('screen-game').classList.remove('active');
+    document.getElementById('screen-setup').classList.add('active');
+    document.querySelectorAll('#player-count-btns .btn').forEach(b => b.classList.toggle('selected', b.dataset.val === '2'));
+    document.querySelectorAll('#starting-life-btns .btn').forEach(b => b.classList.toggle('selected', b.dataset.val === '20'));
+    renderNameInputs();
+  }
+
+  // ── RENDER GAME ────────────────────────────────────────────────
+  function renderGame() {
+    const grid = document.getElementById('players-grid');
+    const count = state.players.length;
+    grid.style.gridTemplateColumns = count <= 2 ? '1fr' : '1fr 1fr';
+    grid.innerHTML = '';
+
+    state.players.forEach(p => {
+      const col = COLORS[p.id];
+      const card = document.createElement('div');
+      card.className = 'player-card' + (p.eliminated ? ' eliminated' : '');
+      card.id = 'pcard-' + p.id;
+      card.style.background = col.bg;
+      card.style.borderColor = col.accent + '44';
+      const isLow = p.life <= Math.floor(p.startingLife * 0.25) && !p.eliminated;
+      card.innerHTML = `
+        <div class="player-top">
+          <div class="player-name" style="color:${col.accent}">${escHtml(p.name)}</div>
+          ${p.eliminated ? '<div class="elim-badge">ELIMINATED</div>' : ''}
+        </div>
+        <div class="life-row">
+          <button class="life-btn" data-id="${p.id}" data-delta="-1" style="border-color:${col.accent}66">−</button>
+          <div class="life-number${isLow ? ' low' : ''}" id="life-${p.id}">${p.life}</div>
+          <button class="life-btn" data-id="${p.id}" data-delta="1" style="border-color:${col.accent}66">+</button>
+          <div class="delta-flash" id="delta-${p.id}"></div>
+        </div>
+        ${renderCmdrSection(p, col)}
+      `;
+      grid.appendChild(card);
+    });
+
+    grid.querySelectorAll('.life-btn').forEach(btn => {
+      btn.addEventListener('click', () => changeLife(parseInt(btn.dataset.id), parseInt(btn.dataset.delta)));
+    });
+    grid.querySelectorAll('.cmdr-btn').forEach(btn => {
+      btn.addEventListener('click', () => changeCmdrDmg(parseInt(btn.dataset.victim), parseInt(btn.dataset.attacker), parseInt(btn.dataset.delta)));
+    });
+  }
+
+  function renderCmdrSection(p, col) {
+    const opponents = state.players.filter(op => op.id !== p.id);
+    if (!opponents.length) return '';
+    const chips = opponents.map(op => {
+      const oCol = COLORS[op.id];
+      const dmg = p.cmdDmg[op.id] || 0;
+      return `<div class="cmdr-chip">
+        <div class="cmdr-dot" style="background:${oCol.accent}"></div>
+        <button class="cmdr-btn" data-victim="${p.id}" data-attacker="${op.id}" data-delta="1">+</button>
+        <div class="cmdr-dmg" id="cmdr-${p.id}-${op.id}">${dmg}</div>
+        <button class="cmdr-btn" data-victim="${p.id}" data-attacker="${op.id}" data-delta="-1">−</button>
+      </div>`;
+    }).join('');
+    return `<div class="cmdr-section"><div class="cmdr-label">Commander Damage Received</div><div class="cmdr-row">${chips}</div></div>`;
+  }
+
+  // ── LIFE CHANGES ───────────────────────────────────────────────
+  function changeLife(id, delta) {
+    const p = state.players[id];
+    if (p.eliminated) return;
+    p.life += delta;
+
+    const lifeEl = document.getElementById('life-' + id);
+    if (lifeEl) {
+      lifeEl.textContent = p.life;
+      lifeEl.classList.toggle('low', p.life <= Math.floor(p.startingLife * 0.25));
+    }
+
+    const deltaEl = document.getElementById('delta-' + id);
+    if (deltaEl) {
+      deltaEl.className = 'delta-flash ' + (delta > 0 ? 'delta-positive' : 'delta-negative');
+      deltaEl.textContent = (delta > 0 ? '+' : '') + delta;
+      void deltaEl.offsetWidth;
+      deltaEl.classList.add('show');
+      setTimeout(() => deltaEl.classList.remove('show'), 1200);
+    }
+
+    if (p.life <= 0 && !p.eliminated) {
+      p.eliminated = true;
+      const card = document.getElementById('pcard-' + id);
+      if (card) card.classList.add('eliminated');
+      const top = card?.querySelector('.player-top');
+      if (top && !top.querySelector('.elim-badge')) {
+        const b = document.createElement('div');
+        b.className = 'elim-badge';
+        b.textContent = 'ELIMINATED';
+        top.appendChild(b);
+      }
+    } else if (p.life > 0 && p.eliminated) {
+      p.eliminated = false;
+      document.getElementById('pcard-' + id)?.classList.remove('eliminated');
+      document.getElementById('pcard-' + id)?.querySelector('.elim-badge')?.remove();
+    }
+  }
+
+  function changeCmdrDmg(victimId, attackerId, delta) {
+    const p = state.players[victimId];
+    p.cmdDmg[attackerId] = Math.max(0, (p.cmdDmg[attackerId] || 0) + delta);
+    const el = document.getElementById(`cmdr-${victimId}-${attackerId}`);
+    if (el) el.textContent = p.cmdDmg[attackerId];
+    if (p.cmdDmg[attackerId] >= 21 && !p.eliminated) changeLife(victimId, -9999);
+  }
+
+  // ── DICE MODAL ─────────────────────────────────────────────────
+  function openDiceModal() {
+    const modal = document.getElementById('dice-modal');
+    const resultsEl = document.getElementById('dice-results');
+    const winnerEl = document.getElementById('winner-announce');
+    const rollBtn = document.getElementById('dice-roll-btn');
+
+    resultsEl.innerHTML = state.players.map(p => `
+      <div class="dice-row">
+        <div class="dice-name" style="color:${COLORS[p.id].accent}">${escHtml(p.name)}</div>
+        <div class="dice-val" id="dv-${p.id}" style="color:${COLORS[p.id].accent}">—</div>
+      </div>`).join('');
+    winnerEl.style.display = 'none';
+    rollBtn.textContent = 'Roll All';
+    modal.classList.add('open');
+
+    rollBtn.onclick = () => {
+      winnerEl.style.display = 'none';
+      const rolls = {};
+      state.players.forEach(p => {
+        const el = document.getElementById('dv-' + p.id);
+        const interval = setInterval(() => { el.textContent = Math.ceil(Math.random() * 20); }, 60);
+        setTimeout(() => {
+          clearInterval(interval);
+          rolls[p.id] = Math.ceil(Math.random() * 20);
+          el.textContent = rolls[p.id];
+        }, 600 + p.id * 80);
+      });
+      setTimeout(() => {
+        let maxRoll = -1; let winners = [];
+        state.players.forEach(p => {
+          if (rolls[p.id] > maxRoll) { maxRoll = rolls[p.id]; winners = [p]; }
+          else if (rolls[p.id] === maxRoll) winners.push(p);
+        });
+        winnerEl.style.display = 'block';
+        winnerEl.innerHTML = winners.length === 1
+          ? `<span style="color:${COLORS[winners[0].id].accent}">${escHtml(winners[0].name)}</span> goes first with a <strong>${maxRoll}</strong>!`
+          : `Tie! ${winners.map(w => `<span style="color:${COLORS[w.id].accent}">${escHtml(w.name)}</span>`).join(' & ')} rolled ${maxRoll}. Roll again!`;
+      }, 900 + state.players.length * 80);
+    };
+
+    document.getElementById('dice-close-btn').onclick = () => modal.classList.remove('open');
+  }
+
+  // ── INIT ───────────────────────────────────────────────────────
+  initSetup();
+</script>
+</body>
+</html>

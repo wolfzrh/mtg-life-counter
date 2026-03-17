@@ -8,78 +8,120 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    body { font-family: 'Crimson Pro', serif; color: #e8dcc8; min-height: 100vh; background: #0a0a0f; }
-    .screen { display: none; padding: 1rem; }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'Crimson Pro', serif; color: #e8dcc8; background: #0a0a0f; }
+
+    .screen { display: none; padding: 1rem; overflow-y: auto; height: 100%; }
     .screen.active { display: block; }
+
     h1 { font-family: 'Cinzel', serif; font-size: clamp(1.6rem, 6vw, 2.2rem); font-weight: 900; text-align: center; color: #c9a84c; letter-spacing: 0.08em; margin-bottom: 0.2rem; }
-    .subtitle { text-align: center; font-size: clamp(0.85rem, 3vw, 1rem); color: #7a6a50; font-style: italic; margin-bottom: 1.5rem; letter-spacing: 0.05em; }
+    .subtitle { text-align: center; font-size: clamp(0.85rem, 3vw, 1rem); color: #7a6a50; font-style: italic; margin-bottom: 1.5rem; }
     .config-card { background: #12121a; border: 1px solid #2a2218; border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: 1rem; }
     .config-label { font-family: 'Cinzel', serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; color: #7a6a50; text-transform: uppercase; margin-bottom: 0.7rem; }
     .btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
     .btn { font-family: 'Cinzel', serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em; border: 1px solid #3a2e1e; border-radius: 8px; background: #1a1510; color: #9a8a6a; padding: 0.55rem 0.9rem; cursor: pointer; transition: all 0.15s; touch-action: manipulation; }
     .btn:hover, .btn:active { border-color: #c9a84c; color: #c9a84c; }
-    .btn.selected { background: #1e1800; border-color: #c9a84c; color: #c9a84c; box-shadow: inset 0 0 20px rgba(201,168,76,0.1); }
-    .btn-primary { background: #1e1800; border: 1px solid #c9a84c; color: #c9a84c; font-size: 1rem; padding: 0.9rem 2rem; width: 100%; margin-top: 0.4rem; border-radius: 8px; cursor: pointer; font-family: 'Cinzel', serif; font-weight: 600; letter-spacing: 0.1em; transition: all 0.2s; touch-action: manipulation; }
-    .btn-primary:active { opacity: 0.8; }
+    .btn.selected { background: #1e1800; border-color: #c9a84c; color: #c9a84c; }
+    .btn-primary { background: #1e1800; border: 1px solid #c9a84c; color: #c9a84c; font-size: 1rem; padding: 0.9rem 2rem; width: 100%; margin-top: 0.4rem; border-radius: 8px; cursor: pointer; font-family: 'Cinzel', serif; font-weight: 600; letter-spacing: 0.1em; touch-action: manipulation; }
     .name-input-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
     .color-dot { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.2); }
-    input[type="text"] { background: #0e0e16; border: 1px solid #2a2218; border-radius: 6px; color: #e8dcc8; font-family: 'Crimson Pro', serif; font-size: 1rem; padding: 0.5rem 0.8rem; flex: 1; outline: none; transition: border-color 0.2s; min-height: 44px; }
+    input[type="text"] { background: #0e0e16; border: 1px solid #2a2218; border-radius: 6px; color: #e8dcc8; font-family: 'Crimson Pro', serif; font-size: 1rem; padding: 0.5rem 0.8rem; flex: 1; outline: none; min-height: 44px; }
     input[type="text"]:focus { border-color: #c9a84c; }
 
-    /* GAME SCREEN */
-    #screen-game { padding: 0.6rem; }
-    .game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.7rem; padding: 0 0.2rem; gap: 8px; }
-    .game-title { font-family: 'Cinzel', serif; font-size: 0.95rem; color: #c9a84c; font-weight: 600; white-space: nowrap; }
-    .header-btns { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
-    .icon-btn { background: #12121a; border: 1px solid #2a2218; border-radius: 6px; color: #7a6a50; font-family: 'Cinzel', serif; font-size: 0.65rem; padding: 0.4rem 0.6rem; cursor: pointer; letter-spacing: 0.04em; transition: all 0.15s; touch-action: manipulation; white-space: nowrap; min-height: 36px; display: flex; align-items: center; }
+    /* ── GAME SCREEN ── */
+    #screen-game {
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0.6rem;
+      gap: 6px;
+      flex-shrink: 0;
+      border-bottom: 1px solid #1a1a22;
+    }
+    .game-title { font-family: 'Cinzel', serif; font-size: 0.85rem; color: #c9a84c; font-weight: 600; white-space: nowrap; }
+    .header-btns { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+    .icon-btn { background: #12121a; border: 1px solid #2a2218; border-radius: 6px; color: #7a6a50; font-family: 'Cinzel', serif; font-size: 0.6rem; padding: 0.35rem 0.55rem; cursor: pointer; letter-spacing: 0.04em; touch-action: manipulation; white-space: nowrap; min-height: 32px; display: flex; align-items: center; transition: all 0.15s; }
     .icon-btn:hover, .icon-btn:active { border-color: #c9a84c; color: #c9a84c; }
     .icon-btn.danger:hover, .icon-btn.danger:active { border-color: #e05050; color: #e05050; }
 
-    /* PLAYER CARDS */
-    .players-grid { display: grid; gap: 8px; }
-    .player-card { border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); padding: 0.75rem 0.85rem; position: relative; overflow: hidden; }
-    .player-card.eliminated { opacity: 0.55; }
+    /* toggle row */
+    .toggle-row {
+      display: flex;
+      gap: 5px;
+      padding: 0.4rem 0.6rem;
+      border-bottom: 1px solid #1a1a22;
+      flex-shrink: 0;
+    }
+    .toggle-btn { font-family: 'Cinzel', serif; font-size: 0.58rem; font-weight: 600; letter-spacing: 0.08em; border: 1px solid #2a2218; border-radius: 20px; background: #12121a; color: #5a5050; padding: 0.3rem 0.7rem; cursor: pointer; touch-action: manipulation; transition: all 0.15s; text-transform: uppercase; }
+    .toggle-btn.on { border-color: #c9a84c55; color: #c9a84c; background: #1a1500; }
+    .toggle-btn.on.green { border-color: #a0d84055; color: #a0d840; background: #141a00; }
+
+    /* players grid fills remaining space */
+    .players-area {
+      flex: 1;
+      overflow: hidden;
+      padding: 0.5rem;
+      display: grid;
+      gap: 5px;
+      min-height: 0;
+    }
+
+    /* PLAYER CARD */
+    .player-card { border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); padding: 0.5rem 0.65rem; position: relative; overflow: hidden; display: flex; flex-direction: column; min-height: 0; }
+    .player-card.eliminated { opacity: 0.5; }
     .player-card::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.45); z-index: 0; }
     .player-card > * { position: relative; z-index: 1; }
-    .player-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
-    .player-name { font-family: 'Cinzel', serif; font-size: clamp(0.75rem, 2.8vw, 0.95rem); font-weight: 600; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
-    .elim-badge { font-family: 'Cinzel', serif; font-size: 0.55rem; background: #3a0a0a; border: 1px solid #7a1a1a; color: #e05050; border-radius: 4px; padding: 2px 5px; letter-spacing: 0.06em; }
 
-    /* LIFE ROW */
-    .life-row { display: flex; align-items: center; justify-content: center; gap: clamp(8px, 3vw, 16px); margin: 0.2rem 0; position: relative; }
-    .life-btn { width: clamp(44px, 12vw, 54px); height: clamp(44px, 12vw, 54px); border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4); color: #fff; font-size: clamp(1.4rem, 5vw, 1.8rem); font-weight: 300; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.12s; line-height: 1; touch-action: manipulation; user-select: none; }
+    .player-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.2rem; flex-shrink: 0; }
+    .player-name { font-family: 'Cinzel', serif; font-size: clamp(0.65rem, 2.2vw, 0.85rem); font-weight: 600; text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
+    .elim-badge { font-family: 'Cinzel', serif; font-size: 0.5rem; background: #3a0a0a; border: 1px solid #7a1a1a; color: #e05050; border-radius: 4px; padding: 1px 4px; }
+
+    /* life row stretches to fill available card height */
+    .life-row { display: flex; align-items: center; justify-content: center; gap: clamp(6px, 2.5vw, 14px); flex: 1; min-height: 0; position: relative; }
+    .life-btn { width: clamp(36px, 10vw, 48px); height: clamp(36px, 10vw, 48px); border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4); color: #fff; font-size: clamp(1.2rem, 4vw, 1.6rem); font-weight: 300; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; touch-action: manipulation; user-select: none; flex-shrink: 0; transition: all 0.1s; }
     .life-btn:active { background: rgba(255,255,255,0.2); transform: scale(0.88); }
-    .life-number { font-family: 'Cinzel', serif; font-size: clamp(2.4rem, 9vw, 3.4rem); font-weight: 900; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.9); min-width: clamp(70px, 20vw, 110px); text-align: center; line-height: 1; }
+    .life-number { font-family: 'Cinzel', serif; font-size: clamp(2rem, 8vw, 3rem); font-weight: 900; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.9); min-width: clamp(60px, 18vw, 95px); text-align: center; line-height: 1; }
     .life-number.low { color: #e05050; animation: pulse-red 1.5s infinite; }
     .life-number.dead { color: #7a3a3a; }
-    @keyframes pulse-red { 0%,100% { text-shadow: 0 2px 10px rgba(0,0,0,0.9); } 50% { text-shadow: 0 0 20px rgba(224,80,80,0.6); } }
-    .delta-flash { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 600; opacity: 0; pointer-events: none; }
+    @keyframes pulse-red { 0%,100% { text-shadow: 0 2px 8px rgba(0,0,0,0.9); } 50% { text-shadow: 0 0 16px rgba(224,80,80,0.6); } }
+    .delta-flash { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 600; opacity: 0; pointer-events: none; }
     .delta-flash.show { animation: delta-anim 1.2s ease-out forwards; }
-    @keyframes delta-anim { 0% { opacity: 1; transform: translateY(-50%); } 100% { opacity: 0; transform: translateY(calc(-50% - 28px)); } }
+    @keyframes delta-anim { 0% { opacity: 1; transform: translateY(-50%); } 100% { opacity: 0; transform: translateY(calc(-50% - 24px)); } }
     .delta-positive { color: #5dca8a; }
     .delta-negative { color: #e05050; }
 
-    /* COMMANDER DAMAGE */
-    .cmdr-section { margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.1); }
-    .cmdr-label { font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.12em; color: rgba(255,255,255,0.45); margin-bottom: 0.35rem; text-transform: uppercase; }
-    .cmdr-row { display: flex; gap: 5px; flex-wrap: wrap; }
-    .cmdr-chip { display: flex; align-items: center; gap: 3px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 3px 6px 3px 5px; }
-    .cmdr-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-    .cmdr-dmg { font-family: 'Cinzel', serif; font-size: 0.8rem; color: #fff; min-width: 14px; text-align: center; }
-    .cmdr-btn { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; touch-action: manipulation; transition: background 0.12s; }
-    .cmdr-btn:active { background: rgba(255,255,255,0.25); }
+    /* expandable sections */
+    .expand-section { overflow: hidden; transition: max-height 0.25s ease, opacity 0.2s ease, margin-top 0.2s; max-height: 0; opacity: 0; margin-top: 0; flex-shrink: 0; }
+    .expand-section.open { max-height: 120px; opacity: 1; margin-top: 0.3rem; }
+    .section-inner { padding-top: 0.35rem; border-top: 1px solid rgba(255,255,255,0.08); }
+    .section-label { font-family: 'Cinzel', serif; font-size: 0.5rem; letter-spacing: 0.12em; color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 0.25rem; }
 
-    /* POISON COUNTERS */
-    .poison-section { margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
-    .poison-label { font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.12em; color: rgba(255,255,255,0.45); text-transform: uppercase; flex-shrink: 0; }
-    .poison-controls { display: flex; align-items: center; gap: 6px; }
-    .poison-btn { width: 26px; height: 26px; border-radius: 50%; border: 1px solid rgba(180,230,80,0.3); background: rgba(0,0,0,0.4); color: rgba(180,230,80,0.8); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; touch-action: manipulation; transition: background 0.12s; }
+    /* commander */
+    .cmdr-row { display: flex; gap: 4px; flex-wrap: wrap; }
+    .cmdr-chip { display: flex; align-items: center; gap: 2px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2px 5px 2px 4px; }
+    .cmdr-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .cmdr-dmg { font-family: 'Cinzel', serif; font-size: 0.75rem; color: #fff; min-width: 12px; text-align: center; }
+    .cmdr-btn { width: 20px; height: 20px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.8); font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; touch-action: manipulation; }
+    .cmdr-btn:active { background: rgba(255,255,255,0.22); }
+
+    /* poison */
+    .poison-row { display: flex; align-items: center; gap: 8px; }
+    .poison-controls { display: flex; align-items: center; gap: 5px; }
+    .poison-btn { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(180,230,80,0.3); background: rgba(0,0,0,0.4); color: rgba(180,230,80,0.8); font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; touch-action: manipulation; }
     .poison-btn:active { background: rgba(180,230,80,0.15); }
-    .poison-count { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 900; color: #a0d840; min-width: 22px; text-align: center; }
+    .poison-count { font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 900; color: #a0d840; min-width: 18px; text-align: center; }
     .poison-count.poisoned { color: #c0f040; animation: pulse-poison 1.5s infinite; }
-    @keyframes pulse-poison { 0%,100% { text-shadow: none; } 50% { text-shadow: 0 0 12px rgba(160,216,64,0.7); } }
-    .poison-pips { display: flex; gap: 3px; flex-wrap: wrap; align-items: center; }
-    .poison-pip { width: 8px; height: 8px; border-radius: 50%; background: #3a3a2a; border: 1px solid #5a5a3a; transition: background 0.2s, border-color 0.2s; }
+    @keyframes pulse-poison { 0%,100% { text-shadow: none; } 50% { text-shadow: 0 0 10px rgba(160,216,64,0.7); } }
+    .poison-pips { display: flex; gap: 3px; align-items: center; flex-wrap: wrap; }
+    .poison-pip { width: 7px; height: 7px; border-radius: 50%; background: #3a3a2a; border: 1px solid #5a5a3a; }
     .poison-pip.filled { background: #a0d840; border-color: #c0f040; }
 
     /* MODALS */
@@ -87,7 +129,7 @@
     @media (min-width: 480px) { .modal-overlay { align-items: center; } }
     .modal-overlay.open { display: flex; }
     .modal { background: #12121a; border: 1px solid #3a2e1e; border-radius: 16px 16px 0 0; padding: 1.4rem 1.2rem 1.8rem; width: 100%; max-width: 520px; max-height: 88vh; overflow-y: auto; }
-    @media (min-width: 480px) { .modal { border-radius: 16px; padding: 1.5rem; max-height: 80vh; } }
+    @media (min-width: 480px) { .modal { border-radius: 16px; padding: 1.5rem; } }
     .modal-title { font-family: 'Cinzel', serif; font-size: 1.05rem; font-weight: 700; color: #c9a84c; margin-bottom: 1.1rem; text-align: center; letter-spacing: 0.08em; }
     .dice-results { display: flex; flex-direction: column; gap: 7px; margin-bottom: 1.1rem; }
     .dice-row { display: flex; align-items: center; justify-content: space-between; background: #0e0e16; border-radius: 8px; padding: 0.5rem 1rem; border: 1px solid #2a2218; transition: opacity 0.3s; }
@@ -96,20 +138,19 @@
     .dice-val { font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 900; }
     .winner-announce { text-align: center; font-family: 'Cinzel', serif; font-size: 0.9rem; color: #c9a84c; padding: 0.75rem; border: 1px solid #3a2e1e; border-radius: 8px; background: #1a1400; margin-bottom: 1rem; line-height: 1.5; }
     .step-btns { display: flex; gap: 8px; }
-    .step-btn { flex: 1; font-family: 'Cinzel', serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em; border-radius: 8px; padding: 0.75rem; cursor: pointer; transition: all 0.15s; touch-action: manipulation; min-height: 48px; }
+    .step-btn { flex: 1; font-family: 'Cinzel', serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em; border-radius: 8px; padding: 0.75rem; cursor: pointer; touch-action: manipulation; min-height: 48px; transition: all 0.15s; }
     .step-btn.secondary { background: transparent; border: 1px solid #3a2e1e; color: #7a6a50; }
     .step-btn.secondary:active { border-color: #c9a84c; color: #c9a84c; }
     .step-btn.primary { background: #1e1800; border: 1px solid #c9a84c; color: #c9a84c; }
-    .step-btn.primary:active { opacity: 0.8; }
     .step-btn.danger { background: #1a0808; border: 1px solid #e05050; color: #e05050; }
-    .step-btn.danger:active { opacity: 0.8; }
     .warn-icon { font-size: 2rem; text-align: center; margin-bottom: 0.7rem; }
     .warn-text { text-align: center; font-size: 0.95rem; color: #b09070; line-height: 1.6; margin-bottom: 1.2rem; font-style: italic; }
   </style>
 </head>
 <body>
 
-<div id="app">
+<div id="app" style="height:100%;">
+
   <!-- SETUP SCREEN -->
   <div id="screen-setup" class="screen active">
     <h1>MTG</h1>
@@ -150,8 +191,13 @@
         <button class="icon-btn danger" id="end-btn">End Game</button>
       </div>
     </div>
-    <div class="players-grid" id="players-grid"></div>
+    <div class="toggle-row">
+      <button class="toggle-btn" id="toggle-cmdr">Cmd Dmg</button>
+      <button class="toggle-btn green" id="toggle-poison">Poison</button>
+    </div>
+    <div class="players-area" id="players-grid"></div>
   </div>
+
 </div>
 
 <!-- DICE MODAL -->
@@ -194,6 +240,7 @@
 
   let cfg = { players: 2, life: 20 };
   let state = { players: [] };
+  let ui = { showCmdr: false, showPoison: false };
   let confirmCallback = null;
   let dicePool = [];
 
@@ -213,35 +260,33 @@
     confirmCallback = onOk;
     document.getElementById('confirm-modal').classList.add('open');
   }
-
-  document.getElementById('confirm-cancel-btn').addEventListener('click', () => {
+  document.getElementById('confirm-cancel-btn').onclick = () => {
     document.getElementById('confirm-modal').classList.remove('open');
     confirmCallback = null;
-  });
-
-  document.getElementById('confirm-ok-btn').addEventListener('click', () => {
+  };
+  document.getElementById('confirm-ok-btn').onclick = () => {
     document.getElementById('confirm-modal').classList.remove('open');
     if (confirmCallback) { confirmCallback(); confirmCallback = null; }
-  });
+  };
 
   // ── SETUP ────────────────────────────────────────────────────
   function initSetup() {
     document.querySelectorAll('#player-count-btns .btn').forEach(b => {
-      b.addEventListener('click', () => {
+      b.onclick = () => {
         document.querySelectorAll('#player-count-btns .btn').forEach(x => x.classList.remove('selected'));
         b.classList.add('selected');
         cfg.players = parseInt(b.dataset.val);
         renderNameInputs();
-      });
+      };
     });
     document.querySelectorAll('#starting-life-btns .btn').forEach(b => {
-      b.addEventListener('click', () => {
+      b.onclick = () => {
         document.querySelectorAll('#starting-life-btns .btn').forEach(x => x.classList.remove('selected'));
         b.classList.add('selected');
         cfg.life = parseInt(b.dataset.val);
-      });
+      };
     });
-    document.getElementById('start-btn').addEventListener('click', startGame);
+    document.getElementById('start-btn').onclick = startGame;
     renderNameInputs();
   }
 
@@ -283,7 +328,25 @@
 
     document.getElementById('screen-setup').classList.remove('active');
     document.getElementById('screen-game').classList.add('active');
-    renderGame();
+
+    // toggles — reset state
+    ui.showCmdr = false;
+    ui.showPoison = false;
+    const tCmdr = document.getElementById('toggle-cmdr');
+    const tPoison = document.getElementById('toggle-poison');
+    tCmdr.classList.remove('on');
+    tPoison.classList.remove('on');
+
+    tCmdr.onclick = () => {
+      ui.showCmdr = !ui.showCmdr;
+      tCmdr.classList.toggle('on', ui.showCmdr);
+      updateExpandSections();
+    };
+    tPoison.onclick = () => {
+      ui.showPoison = !ui.showPoison;
+      tPoison.classList.toggle('on', ui.showPoison);
+      updateExpandSections();
+    };
 
     document.getElementById('dice-btn').onclick = () => openDiceModal(state.players.map(p => p.id));
 
@@ -305,10 +368,12 @@
     document.getElementById('end-btn').onclick = () => {
       showConfirm({
         icon: '☠', title: 'End the Game?', titleColor: '#e05050',
-        text: 'All life totals and commander damage will be lost. The battlefield will be cleared and you will return to the front page.',
+        text: 'All progress will be lost and you will return to the front page.',
         okLabel: 'End Game', okClass: 'danger', onOk: endGame
       });
     };
+
+    renderGame();
   }
 
   function endGame() {
@@ -321,10 +386,20 @@
     renderNameInputs();
   }
 
-  // ── RENDER ───────────────────────────────────────────────────
+  // ── GRID LAYOUT ──────────────────────────────────────────────
+  function getGridStyle(n) {
+    if (n <= 2) return { cols: '1fr', rows: `repeat(${n}, 1fr)` };
+    if (n <= 4) return { cols: '1fr 1fr', rows: `repeat(${Math.ceil(n / 2)}, 1fr)` };
+    if (n <= 6) return { cols: '1fr 1fr', rows: 'repeat(3, 1fr)' };
+    return { cols: '1fr 1fr', rows: 'repeat(4, 1fr)' };
+  }
+
+  // ── RENDER GAME ──────────────────────────────────────────────
   function renderGame() {
     const grid = document.getElementById('players-grid');
-    grid.style.gridTemplateColumns = state.players.length <= 2 ? '1fr' : '1fr 1fr';
+    const gs = getGridStyle(state.players.length);
+    grid.style.gridTemplateColumns = gs.cols;
+    grid.style.gridTemplateRows = gs.rows;
     grid.innerHTML = '';
 
     state.players.forEach(p => {
@@ -339,7 +414,7 @@
       card.innerHTML = `
         <div class="player-top">
           <div class="player-name" style="color:${col.accent}">${escHtml(p.name)}</div>
-          ${p.eliminated ? '<div class="elim-badge">ELIMINATED</div>' : ''}
+          ${p.eliminated ? '<div class="elim-badge">OUT</div>' : ''}
         </div>
         <div class="life-row">
           <button class="life-btn" data-id="${p.id}" data-delta="-1" style="border-color:${col.accent}66">−</button>
@@ -347,24 +422,29 @@
           <button class="life-btn" data-id="${p.id}" data-delta="1" style="border-color:${col.accent}66">+</button>
           <div class="delta-flash" id="delta-${p.id}"></div>
         </div>
-        ${renderCmdrSection(p, col)}
-        ${renderPoisonSection(p)}
+        <div class="expand-section${ui.showCmdr ? ' open' : ''}" id="cmdr-sec-${p.id}">
+          ${renderCmdrInner(p, col)}
+        </div>
+        <div class="expand-section${ui.showPoison ? ' open' : ''}" id="poison-sec-${p.id}">
+          ${renderPoisonInner(p)}
+        </div>
       `;
       grid.appendChild(card);
     });
 
-    grid.querySelectorAll('.life-btn').forEach(btn => {
-      btn.addEventListener('click', () => changeLife(parseInt(btn.dataset.id), parseInt(btn.dataset.delta)));
-    });
-    grid.querySelectorAll('.cmdr-btn').forEach(btn => {
-      btn.addEventListener('click', () => changeCmdrDmg(parseInt(btn.dataset.victim), parseInt(btn.dataset.attacker), parseInt(btn.dataset.delta)));
-    });
-    grid.querySelectorAll('.poison-btn').forEach(btn => {
-      btn.addEventListener('click', () => changePoison(parseInt(btn.dataset.id), parseInt(btn.dataset.delta)));
+    grid.querySelectorAll('.life-btn').forEach(b => b.onclick = () => changeLife(+b.dataset.id, +b.dataset.delta));
+    grid.querySelectorAll('.cmdr-btn').forEach(b => b.onclick = () => changeCmdrDmg(+b.dataset.victim, +b.dataset.attacker, +b.dataset.delta));
+    grid.querySelectorAll('.poison-btn').forEach(b => b.onclick = () => changePoison(+b.dataset.id, +b.dataset.delta));
+  }
+
+  function updateExpandSections() {
+    state.players.forEach(p => {
+      document.getElementById('cmdr-sec-' + p.id)?.classList.toggle('open', ui.showCmdr);
+      document.getElementById('poison-sec-' + p.id)?.classList.toggle('open', ui.showPoison);
     });
   }
 
-  function renderCmdrSection(p, col) {
+  function renderCmdrInner(p, col) {
     const opponents = state.players.filter(op => op.id !== p.id);
     if (!opponents.length) return '';
     const chips = opponents.map(op => {
@@ -376,23 +456,24 @@
         <button class="cmdr-btn" data-victim="${p.id}" data-attacker="${op.id}" data-delta="-1">−</button>
       </div>`;
     }).join('');
-    return `<div class="cmdr-section"><div class="cmdr-label">Commander Damage Received</div><div class="cmdr-row">${chips}</div></div>`;
+    return `<div class="section-inner"><div class="section-label">Cmd Damage</div><div class="cmdr-row">${chips}</div></div>`;
   }
 
-  function renderPoisonSection(p) {
+  function renderPoisonInner(p) {
     const pips = Array.from({ length: 10 }, (_, i) =>
       `<div class="poison-pip${i < p.poison ? ' filled' : ''}"></div>`
     ).join('');
-    return `
-      <div class="poison-section">
-        <div class="poison-label">Poison</div>
+    return `<div class="section-inner">
+      <div class="section-label">Poison</div>
+      <div class="poison-row">
         <div class="poison-controls">
           <button class="poison-btn" data-id="${p.id}" data-delta="-1">−</button>
           <div class="poison-count${p.poison >= 10 ? ' poisoned' : ''}" id="poison-${p.id}">${p.poison}</div>
           <button class="poison-btn" data-id="${p.id}" data-delta="1">+</button>
         </div>
         <div class="poison-pips" id="poison-pips-${p.id}">${pips}</div>
-      </div>`;
+      </div>
+    </div>`;
   }
 
   // ── LIFE ─────────────────────────────────────────────────────
@@ -400,31 +481,30 @@
     const p = state.players[id];
     p.life += delta;
 
-    const lifeEl = document.getElementById('life-' + id);
-    if (lifeEl) {
-      lifeEl.textContent = p.life;
+    const el = document.getElementById('life-' + id);
+    if (el) {
+      el.textContent = p.life;
       const isLow = !p.eliminated && p.life > 0 && p.life <= Math.floor(p.startingLife * 0.25);
-      lifeEl.className = 'life-number' + (isLow ? ' low' : '') + (p.life <= 0 ? ' dead' : '');
+      el.className = 'life-number' + (isLow ? ' low' : '') + (p.life <= 0 ? ' dead' : '');
     }
 
-    const deltaEl = document.getElementById('delta-' + id);
-    if (deltaEl) {
-      deltaEl.className = 'delta-flash ' + (delta > 0 ? 'delta-positive' : 'delta-negative');
-      deltaEl.textContent = (delta > 0 ? '+' : '') + delta;
-      void deltaEl.offsetWidth;
-      deltaEl.classList.add('show');
-      setTimeout(() => deltaEl.classList.remove('show'), 1200);
+    const de = document.getElementById('delta-' + id);
+    if (de) {
+      de.className = 'delta-flash ' + (delta > 0 ? 'delta-positive' : 'delta-negative');
+      de.textContent = (delta > 0 ? '+' : '') + delta;
+      void de.offsetWidth;
+      de.classList.add('show');
+      setTimeout(() => de.classList.remove('show'), 1200);
     }
 
     if (p.life <= 0 && !p.eliminated) {
       p.eliminated = true;
-      const card = document.getElementById('pcard-' + id);
-      card?.classList.add('eliminated');
-      const top = card?.querySelector('.player-top');
+      document.getElementById('pcard-' + id)?.classList.add('eliminated');
+      const top = document.getElementById('pcard-' + id)?.querySelector('.player-top');
       if (top && !top.querySelector('.elim-badge')) {
         const b = document.createElement('div');
         b.className = 'elim-badge';
-        b.textContent = 'ELIMINATED';
+        b.textContent = 'OUT';
         top.appendChild(b);
       }
     }
@@ -441,93 +521,78 @@
     const p = state.players[id];
     p.poison = Math.max(0, p.poison + delta);
 
-    const countEl = document.getElementById('poison-' + id);
-    if (countEl) {
-      countEl.textContent = p.poison;
-      countEl.className = 'poison-count' + (p.poison >= 10 ? ' poisoned' : '');
-    }
+    const el = document.getElementById('poison-' + id);
+    if (el) { el.textContent = p.poison; el.className = 'poison-count' + (p.poison >= 10 ? ' poisoned' : ''); }
 
-    const pipsEl = document.getElementById('poison-pips-' + id);
-    if (pipsEl) {
-      pipsEl.querySelectorAll('.poison-pip').forEach((pip, i) => {
-        pip.classList.toggle('filled', i < p.poison);
-      });
-    }
+    document.getElementById('poison-pips-' + id)?.querySelectorAll('.poison-pip').forEach((pip, i) => {
+      pip.classList.toggle('filled', i < p.poison);
+    });
 
     if (p.poison >= 10 && !p.eliminated) changeLife(id, -9999);
   }
 
   // ── COMMANDER DAMAGE ─────────────────────────────────────────
-  function changeCmdrDmg(victimId, attackerId, delta) {
-    const p = state.players[victimId];
-    p.cmdDmg[attackerId] = Math.max(0, (p.cmdDmg[attackerId] || 0) + delta);
-    const el = document.getElementById(`cmdr-${victimId}-${attackerId}`);
-    if (el) el.textContent = p.cmdDmg[attackerId];
-    if (p.cmdDmg[attackerId] >= 21 && !p.eliminated) changeLife(victimId, -9999);
+  function changeCmdrDmg(vId, aId, delta) {
+    const p = state.players[vId];
+    p.cmdDmg[aId] = Math.max(0, (p.cmdDmg[aId] || 0) + delta);
+    const el = document.getElementById(`cmdr-${vId}-${aId}`);
+    if (el) el.textContent = p.cmdDmg[aId];
+    if (p.cmdDmg[aId] >= 21 && !p.eliminated) changeLife(vId, -9999);
   }
 
   // ── DICE MODAL ───────────────────────────────────────────────
   function openDiceModal(playerIds) {
     dicePool = playerIds;
-    const modal = document.getElementById('dice-modal');
-    const resultsEl = document.getElementById('dice-results');
-    const winnerEl = document.getElementById('winner-announce');
-    const rollBtn = document.getElementById('dice-roll-btn');
-    const titleEl = document.getElementById('dice-modal-title');
+    const isTie = playerIds.length < state.players.length;
+    document.getElementById('dice-modal-title').textContent = isTie ? 'Tiebreaker Roll' : 'Roll to Decide First Turn';
 
-    const isTieBreaker = playerIds.length < state.players.length;
-    titleEl.textContent = isTieBreaker ? 'Tiebreaker Roll' : 'Roll to Decide First Turn';
-
-    resultsEl.innerHTML = state.players.map(p => {
+    document.getElementById('dice-results').innerHTML = state.players.map(p => {
       const inPool = playerIds.includes(p.id);
-      return `<div class="dice-row${inPool ? '' : ' dimmed'}" id="drow-${p.id}">
+      return `<div class="dice-row${inPool ? '' : ' dimmed'}">
         <div class="dice-name" style="color:${COLORS[p.id].accent}">${escHtml(p.name)}</div>
         <div class="dice-val" id="dv-${p.id}" style="color:${COLORS[p.id].accent}">${inPool ? '—' : '·'}</div>
       </div>`;
     }).join('');
 
+    const winnerEl = document.getElementById('winner-announce');
+    const rollBtn = document.getElementById('dice-roll-btn');
     winnerEl.style.display = 'none';
-    rollBtn.textContent = isTieBreaker ? 'Roll Tiebreaker' : 'Roll All';
-    modal.classList.add('open');
+    rollBtn.textContent = isTie ? 'Roll Tiebreaker' : 'Roll All';
+    document.getElementById('dice-modal').classList.add('open');
 
     rollBtn.onclick = () => {
       winnerEl.style.display = 'none';
       const rolls = {};
-
       dicePool.forEach((pid, i) => {
         const el = document.getElementById('dv-' + pid);
-        const interval = setInterval(() => { el.textContent = Math.ceil(Math.random() * 20); }, 60);
+        const iv = setInterval(() => { el.textContent = Math.ceil(Math.random() * 20); }, 60);
         setTimeout(() => {
-          clearInterval(interval);
+          clearInterval(iv);
           rolls[pid] = Math.ceil(Math.random() * 20);
           el.textContent = rolls[pid];
         }, 600 + i * 80);
       });
 
       setTimeout(() => {
-        let maxRoll = -1;
-        dicePool.forEach(pid => { if (rolls[pid] > maxRoll) maxRoll = rolls[pid]; });
-        const winners = dicePool.filter(pid => rolls[pid] === maxRoll);
-
+        let max = -1;
+        dicePool.forEach(pid => { if (rolls[pid] > max) max = rolls[pid]; });
+        const winners = dicePool.filter(pid => rolls[pid] === max);
         winnerEl.style.display = 'block';
 
         if (winners.length === 1) {
           const w = state.players[winners[0]];
-          winnerEl.innerHTML = `<span style="color:${COLORS[w.id].accent}">${escHtml(w.name)}</span> goes first with a <strong>${maxRoll}</strong>!`;
+          winnerEl.innerHTML = `<span style="color:${COLORS[w.id].accent}">${escHtml(w.name)}</span> goes first with a <strong>${max}</strong>!`;
           rollBtn.textContent = 'Roll Again';
           rollBtn.onclick = () => openDiceModal(state.players.map(p => p.id));
         } else {
-          const tiedNames = winners.map(pid =>
-            `<span style="color:${COLORS[pid].accent}">${escHtml(state.players[pid].name)}</span>`
-          ).join(' & ');
-          winnerEl.innerHTML = `Tie between ${tiedNames} with <strong>${maxRoll}</strong>! They roll again.`;
+          winnerEl.innerHTML = `Tie between ${winners.map(pid => `<span style="color:${COLORS[pid].accent}">${escHtml(state.players[pid].name)}</span>`).join(' & ')} with <strong>${max}</strong>! They roll again.`;
           rollBtn.textContent = 'Roll Tiebreaker';
           rollBtn.onclick = () => openDiceModal(winners);
         }
       }, 900 + dicePool.length * 80);
     };
 
-    document.getElementById('dice-close-btn').onclick = () => modal.classList.remove('open');
+    document.getElementById('dice-close-btn').onclick = () => document.getElementById('dice-modal').classList.remove('open');
   }
 
   // ── INIT ─────────────────────────────────────────────────────

@@ -9,24 +9,18 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { font-family: 'Crimson Pro', serif; color: #e8dcc8; min-height: 100vh; background: #0a0a0f; }
-
     .screen { display: none; padding: 1rem; }
     .screen.active { display: block; }
-
     h1 { font-family: 'Cinzel', serif; font-size: clamp(1.6rem, 6vw, 2.2rem); font-weight: 900; text-align: center; color: #c9a84c; letter-spacing: 0.08em; margin-bottom: 0.2rem; }
     .subtitle { text-align: center; font-size: clamp(0.85rem, 3vw, 1rem); color: #7a6a50; font-style: italic; margin-bottom: 1.5rem; letter-spacing: 0.05em; }
-
     .config-card { background: #12121a; border: 1px solid #2a2218; border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: 1rem; }
     .config-label { font-family: 'Cinzel', serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; color: #7a6a50; text-transform: uppercase; margin-bottom: 0.7rem; }
     .btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
-
     .btn { font-family: 'Cinzel', serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em; border: 1px solid #3a2e1e; border-radius: 8px; background: #1a1510; color: #9a8a6a; padding: 0.55rem 0.9rem; cursor: pointer; transition: all 0.15s; touch-action: manipulation; }
     .btn:hover, .btn:active { border-color: #c9a84c; color: #c9a84c; }
     .btn.selected { background: #1e1800; border-color: #c9a84c; color: #c9a84c; box-shadow: inset 0 0 20px rgba(201,168,76,0.1); }
-
     .btn-primary { background: #1e1800; border: 1px solid #c9a84c; color: #c9a84c; font-size: 1rem; padding: 0.9rem 2rem; width: 100%; margin-top: 0.4rem; border-radius: 8px; cursor: pointer; font-family: 'Cinzel', serif; font-weight: 600; letter-spacing: 0.1em; transition: all 0.2s; touch-action: manipulation; }
     .btn-primary:active { opacity: 0.8; }
-
     .name-input-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
     .color-dot { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.2); }
     input[type="text"] { background: #0e0e16; border: 1px solid #2a2218; border-radius: 6px; color: #e8dcc8; font-family: 'Crimson Pro', serif; font-size: 1rem; padding: 0.5rem 0.8rem; flex: 1; outline: none; transition: border-color 0.2s; min-height: 44px; }
@@ -41,32 +35,31 @@
     .icon-btn:hover, .icon-btn:active { border-color: #c9a84c; color: #c9a84c; }
     .icon-btn.danger:hover, .icon-btn.danger:active { border-color: #e05050; color: #e05050; }
 
+    /* PLAYER CARDS */
     .players-grid { display: grid; gap: 8px; }
-
     .player-card { border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); padding: 0.75rem 0.85rem; position: relative; overflow: hidden; }
-    .player-card.eliminated { opacity: 0.4; filter: grayscale(0.8); }
+    .player-card.eliminated { opacity: 0.55; }
     .player-card::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.45); z-index: 0; }
     .player-card > * { position: relative; z-index: 1; }
-
     .player-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
     .player-name { font-family: 'Cinzel', serif; font-size: clamp(0.75rem, 2.8vw, 0.95rem); font-weight: 600; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
     .elim-badge { font-family: 'Cinzel', serif; font-size: 0.55rem; background: #3a0a0a; border: 1px solid #7a1a1a; color: #e05050; border-radius: 4px; padding: 2px 5px; letter-spacing: 0.06em; }
 
+    /* LIFE ROW */
     .life-row { display: flex; align-items: center; justify-content: center; gap: clamp(8px, 3vw, 16px); margin: 0.2rem 0; position: relative; }
-
     .life-btn { width: clamp(44px, 12vw, 54px); height: clamp(44px, 12vw, 54px); border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4); color: #fff; font-size: clamp(1.4rem, 5vw, 1.8rem); font-weight: 300; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.12s; line-height: 1; touch-action: manipulation; user-select: none; }
     .life-btn:active { background: rgba(255,255,255,0.2); transform: scale(0.88); }
-
     .life-number { font-family: 'Cinzel', serif; font-size: clamp(2.4rem, 9vw, 3.4rem); font-weight: 900; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.9); min-width: clamp(70px, 20vw, 110px); text-align: center; line-height: 1; }
     .life-number.low { color: #e05050; animation: pulse-red 1.5s infinite; }
+    .life-number.dead { color: #7a3a3a; }
     @keyframes pulse-red { 0%,100% { text-shadow: 0 2px 10px rgba(0,0,0,0.9); } 50% { text-shadow: 0 0 20px rgba(224,80,80,0.6); } }
-
     .delta-flash { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 600; opacity: 0; pointer-events: none; }
     .delta-flash.show { animation: delta-anim 1.2s ease-out forwards; }
     @keyframes delta-anim { 0% { opacity: 1; transform: translateY(-50%); } 100% { opacity: 0; transform: translateY(calc(-50% - 28px)); } }
     .delta-positive { color: #5dca8a; }
     .delta-negative { color: #e05050; }
 
+    /* COMMANDER DAMAGE */
     .cmdr-section { margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.1); }
     .cmdr-label { font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.12em; color: rgba(255,255,255,0.45); margin-bottom: 0.35rem; text-transform: uppercase; }
     .cmdr-row { display: flex; gap: 5px; flex-wrap: wrap; }
@@ -76,20 +69,32 @@
     .cmdr-btn { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; touch-action: manipulation; transition: background 0.12s; }
     .cmdr-btn:active { background: rgba(255,255,255,0.25); }
 
+    /* POISON COUNTERS */
+    .poison-section { margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+    .poison-label { font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.12em; color: rgba(255,255,255,0.45); text-transform: uppercase; flex-shrink: 0; }
+    .poison-controls { display: flex; align-items: center; gap: 6px; }
+    .poison-btn { width: 26px; height: 26px; border-radius: 50%; border: 1px solid rgba(180,230,80,0.3); background: rgba(0,0,0,0.4); color: rgba(180,230,80,0.8); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; touch-action: manipulation; transition: background 0.12s; }
+    .poison-btn:active { background: rgba(180,230,80,0.15); }
+    .poison-count { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 900; color: #a0d840; min-width: 22px; text-align: center; }
+    .poison-count.poisoned { color: #c0f040; animation: pulse-poison 1.5s infinite; }
+    @keyframes pulse-poison { 0%,100% { text-shadow: none; } 50% { text-shadow: 0 0 12px rgba(160,216,64,0.7); } }
+    .poison-pips { display: flex; gap: 3px; flex-wrap: wrap; align-items: center; }
+    .poison-pip { width: 8px; height: 8px; border-radius: 50%; background: #3a3a2a; border: 1px solid #5a5a3a; transition: background 0.2s, border-color 0.2s; }
+    .poison-pip.filled { background: #a0d840; border-color: #c0f040; }
+
     /* MODALS */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 100; align-items: flex-end; justify-content: center; padding-bottom: env(safe-area-inset-bottom, 0); }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 100; align-items: flex-end; justify-content: center; }
     @media (min-width: 480px) { .modal-overlay { align-items: center; } }
     .modal-overlay.open { display: flex; }
     .modal { background: #12121a; border: 1px solid #3a2e1e; border-radius: 16px 16px 0 0; padding: 1.4rem 1.2rem 1.8rem; width: 100%; max-width: 520px; max-height: 88vh; overflow-y: auto; }
     @media (min-width: 480px) { .modal { border-radius: 16px; padding: 1.5rem; max-height: 80vh; } }
-
     .modal-title { font-family: 'Cinzel', serif; font-size: 1.05rem; font-weight: 700; color: #c9a84c; margin-bottom: 1.1rem; text-align: center; letter-spacing: 0.08em; }
     .dice-results { display: flex; flex-direction: column; gap: 7px; margin-bottom: 1.1rem; }
-    .dice-row { display: flex; align-items: center; justify-content: space-between; background: #0e0e16; border-radius: 8px; padding: 0.5rem 1rem; border: 1px solid #2a2218; }
+    .dice-row { display: flex; align-items: center; justify-content: space-between; background: #0e0e16; border-radius: 8px; padding: 0.5rem 1rem; border: 1px solid #2a2218; transition: opacity 0.3s; }
+    .dice-row.dimmed { opacity: 0.3; }
     .dice-name { font-family: 'Cinzel', serif; font-size: 0.85rem; font-weight: 600; }
     .dice-val { font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 900; }
     .winner-announce { text-align: center; font-family: 'Cinzel', serif; font-size: 0.9rem; color: #c9a84c; padding: 0.75rem; border: 1px solid #3a2e1e; border-radius: 8px; background: #1a1400; margin-bottom: 1rem; line-height: 1.5; }
-
     .step-btns { display: flex; gap: 8px; }
     .step-btn { flex: 1; font-family: 'Cinzel', serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em; border-radius: 8px; padding: 0.75rem; cursor: pointer; transition: all 0.15s; touch-action: manipulation; min-height: 48px; }
     .step-btn.secondary { background: transparent; border: 1px solid #3a2e1e; color: #7a6a50; }
@@ -98,7 +103,6 @@
     .step-btn.primary:active { opacity: 0.8; }
     .step-btn.danger { background: #1a0808; border: 1px solid #e05050; color: #e05050; }
     .step-btn.danger:active { opacity: 0.8; }
-
     .warn-icon { font-size: 2rem; text-align: center; margin-bottom: 0.7rem; }
     .warn-text { text-align: center; font-size: 0.95rem; color: #b09070; line-height: 1.6; margin-bottom: 1.2rem; font-style: italic; }
   </style>
@@ -153,7 +157,7 @@
 <!-- DICE MODAL -->
 <div class="modal-overlay" id="dice-modal">
   <div class="modal">
-    <div class="modal-title">Roll to Decide First Turn</div>
+    <div class="modal-title" id="dice-modal-title">Roll to Decide First Turn</div>
     <div class="dice-results" id="dice-results"></div>
     <div class="winner-announce" id="winner-announce" style="display:none;"></div>
     <div class="step-btns">
@@ -163,15 +167,15 @@
   </div>
 </div>
 
-<!-- CONFIRM MODAL (shared for Reset + End Game) -->
+<!-- CONFIRM MODAL -->
 <div class="modal-overlay" id="confirm-modal">
   <div class="modal">
     <div class="warn-icon" id="confirm-icon">☠</div>
-    <div class="modal-title" id="confirm-title">End the Game?</div>
+    <div class="modal-title" id="confirm-title"></div>
     <div class="warn-text" id="confirm-text"></div>
     <div class="step-btns">
       <button class="step-btn secondary" id="confirm-cancel-btn">Keep Playing</button>
-      <button class="step-btn danger" id="confirm-ok-btn">Confirm</button>
+      <button class="step-btn" id="confirm-ok-btn">Confirm</button>
     </div>
   </div>
 </div>
@@ -191,12 +195,13 @@
   let cfg = { players: 2, life: 20 };
   let state = { players: [] };
   let confirmCallback = null;
+  let dicePool = [];
 
   function escHtml(s) {
     return s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
-  // ── CONFIRM MODAL ──────────────────────────────────────────────
+  // ── CONFIRM MODAL ────────────────────────────────────────────
   function showConfirm({ icon, title, titleColor, text, okLabel, okClass, onOk }) {
     document.getElementById('confirm-icon').textContent = icon;
     document.getElementById('confirm-title').textContent = title;
@@ -219,7 +224,7 @@
     if (confirmCallback) { confirmCallback(); confirmCallback = null; }
   });
 
-  // ── SETUP SCREEN ───────────────────────────────────────────────
+  // ── SETUP ────────────────────────────────────────────────────
   function initSetup() {
     document.querySelectorAll('#player-count-btns .btn').forEach(b => {
       b.addEventListener('click', () => {
@@ -229,7 +234,6 @@
         renderNameInputs();
       });
     });
-
     document.querySelectorAll('#starting-life-btns .btn').forEach(b => {
       b.addEventListener('click', () => {
         document.querySelectorAll('#starting-life-btns .btn').forEach(x => x.classList.remove('selected'));
@@ -237,7 +241,6 @@
         cfg.life = parseInt(b.dataset.val);
       });
     });
-
     document.getElementById('start-btn').addEventListener('click', startGame);
     renderNameInputs();
   }
@@ -262,7 +265,7 @@
     }
   }
 
-  // ── START GAME ─────────────────────────────────────────────────
+  // ── GAME ─────────────────────────────────────────────────────
   function startGame() {
     const inputs = document.querySelectorAll('#name-inputs input');
     state.players = Array.from({ length: cfg.players }, (_, i) => ({
@@ -271,6 +274,7 @@
       life: cfg.life,
       startingLife: cfg.life,
       eliminated: false,
+      poison: 0,
       cmdDmg: {}
     }));
     state.players.forEach(p => {
@@ -281,20 +285,16 @@
     document.getElementById('screen-game').classList.add('active');
     renderGame();
 
-    document.getElementById('dice-btn').onclick = openDiceModal;
+    document.getElementById('dice-btn').onclick = () => openDiceModal(state.players.map(p => p.id));
 
     document.getElementById('reset-btn').onclick = () => {
       showConfirm({
-        icon: '↺',
-        title: 'Reset Life Totals?',
-        titleColor: '#c9a84c',
-        text: 'All life totals and commander damage will be reset to their starting values.',
-        okLabel: 'Reset',
-        okClass: 'primary',
+        icon: '↺', title: 'Reset Life Totals?', titleColor: '#c9a84c',
+        text: 'All life totals, poison counters and commander damage will be reset to their starting values.',
+        okLabel: 'Reset', okClass: 'primary',
         onOk: () => {
           state.players.forEach(p => {
-            p.life = p.startingLife;
-            p.eliminated = false;
+            p.life = p.startingLife; p.eliminated = false; p.poison = 0;
             Object.keys(p.cmdDmg).forEach(k => p.cmdDmg[k] = 0);
           });
           renderGame();
@@ -304,13 +304,9 @@
 
     document.getElementById('end-btn').onclick = () => {
       showConfirm({
-        icon: '☠',
-        title: 'End the Game?',
-        titleColor: '#e05050',
+        icon: '☠', title: 'End the Game?', titleColor: '#e05050',
         text: 'All life totals and commander damage will be lost. The battlefield will be cleared and you will return to the front page.',
-        okLabel: 'End Game',
-        okClass: 'danger',
-        onOk: endGame
+        okLabel: 'End Game', okClass: 'danger', onOk: endGame
       });
     };
   }
@@ -325,11 +321,10 @@
     renderNameInputs();
   }
 
-  // ── RENDER GAME ────────────────────────────────────────────────
+  // ── RENDER ───────────────────────────────────────────────────
   function renderGame() {
     const grid = document.getElementById('players-grid');
-    const count = state.players.length;
-    grid.style.gridTemplateColumns = count <= 2 ? '1fr' : '1fr 1fr';
+    grid.style.gridTemplateColumns = state.players.length <= 2 ? '1fr' : '1fr 1fr';
     grid.innerHTML = '';
 
     state.players.forEach(p => {
@@ -339,7 +334,8 @@
       card.id = 'pcard-' + p.id;
       card.style.background = col.bg;
       card.style.borderColor = col.accent + '44';
-      const isLow = p.life <= Math.floor(p.startingLife * 0.25) && !p.eliminated;
+      const isLow = !p.eliminated && p.life > 0 && p.life <= Math.floor(p.startingLife * 0.25);
+
       card.innerHTML = `
         <div class="player-top">
           <div class="player-name" style="color:${col.accent}">${escHtml(p.name)}</div>
@@ -347,11 +343,12 @@
         </div>
         <div class="life-row">
           <button class="life-btn" data-id="${p.id}" data-delta="-1" style="border-color:${col.accent}66">−</button>
-          <div class="life-number${isLow ? ' low' : ''}" id="life-${p.id}">${p.life}</div>
+          <div class="life-number${isLow ? ' low' : ''}${p.life <= 0 ? ' dead' : ''}" id="life-${p.id}">${p.life}</div>
           <button class="life-btn" data-id="${p.id}" data-delta="1" style="border-color:${col.accent}66">+</button>
           <div class="delta-flash" id="delta-${p.id}"></div>
         </div>
         ${renderCmdrSection(p, col)}
+        ${renderPoisonSection(p)}
       `;
       grid.appendChild(card);
     });
@@ -362,6 +359,9 @@
     grid.querySelectorAll('.cmdr-btn').forEach(btn => {
       btn.addEventListener('click', () => changeCmdrDmg(parseInt(btn.dataset.victim), parseInt(btn.dataset.attacker), parseInt(btn.dataset.delta)));
     });
+    grid.querySelectorAll('.poison-btn').forEach(btn => {
+      btn.addEventListener('click', () => changePoison(parseInt(btn.dataset.id), parseInt(btn.dataset.delta)));
+    });
   }
 
   function renderCmdrSection(p, col) {
@@ -369,27 +369,42 @@
     if (!opponents.length) return '';
     const chips = opponents.map(op => {
       const oCol = COLORS[op.id];
-      const dmg = p.cmdDmg[op.id] || 0;
       return `<div class="cmdr-chip">
         <div class="cmdr-dot" style="background:${oCol.accent}"></div>
         <button class="cmdr-btn" data-victim="${p.id}" data-attacker="${op.id}" data-delta="1">+</button>
-        <div class="cmdr-dmg" id="cmdr-${p.id}-${op.id}">${dmg}</div>
+        <div class="cmdr-dmg" id="cmdr-${p.id}-${op.id}">${p.cmdDmg[op.id] || 0}</div>
         <button class="cmdr-btn" data-victim="${p.id}" data-attacker="${op.id}" data-delta="-1">−</button>
       </div>`;
     }).join('');
     return `<div class="cmdr-section"><div class="cmdr-label">Commander Damage Received</div><div class="cmdr-row">${chips}</div></div>`;
   }
 
-  // ── LIFE CHANGES ───────────────────────────────────────────────
+  function renderPoisonSection(p) {
+    const pips = Array.from({ length: 10 }, (_, i) =>
+      `<div class="poison-pip${i < p.poison ? ' filled' : ''}"></div>`
+    ).join('');
+    return `
+      <div class="poison-section">
+        <div class="poison-label">Poison</div>
+        <div class="poison-controls">
+          <button class="poison-btn" data-id="${p.id}" data-delta="-1">−</button>
+          <div class="poison-count${p.poison >= 10 ? ' poisoned' : ''}" id="poison-${p.id}">${p.poison}</div>
+          <button class="poison-btn" data-id="${p.id}" data-delta="1">+</button>
+        </div>
+        <div class="poison-pips" id="poison-pips-${p.id}">${pips}</div>
+      </div>`;
+  }
+
+  // ── LIFE ─────────────────────────────────────────────────────
   function changeLife(id, delta) {
     const p = state.players[id];
-    if (p.eliminated) return;
     p.life += delta;
 
     const lifeEl = document.getElementById('life-' + id);
     if (lifeEl) {
       lifeEl.textContent = p.life;
-      lifeEl.classList.toggle('low', p.life <= Math.floor(p.startingLife * 0.25));
+      const isLow = !p.eliminated && p.life > 0 && p.life <= Math.floor(p.startingLife * 0.25);
+      lifeEl.className = 'life-number' + (isLow ? ' low' : '') + (p.life <= 0 ? ' dead' : '');
     }
 
     const deltaEl = document.getElementById('delta-' + id);
@@ -404,7 +419,7 @@
     if (p.life <= 0 && !p.eliminated) {
       p.eliminated = true;
       const card = document.getElementById('pcard-' + id);
-      if (card) card.classList.add('eliminated');
+      card?.classList.add('eliminated');
       const top = card?.querySelector('.player-top');
       if (top && !top.querySelector('.elim-badge')) {
         const b = document.createElement('div');
@@ -412,13 +427,37 @@
         b.textContent = 'ELIMINATED';
         top.appendChild(b);
       }
-    } else if (p.life > 0 && p.eliminated) {
+    }
+
+    if (p.life > 0 && p.eliminated) {
       p.eliminated = false;
       document.getElementById('pcard-' + id)?.classList.remove('eliminated');
       document.getElementById('pcard-' + id)?.querySelector('.elim-badge')?.remove();
     }
   }
 
+  // ── POISON ───────────────────────────────────────────────────
+  function changePoison(id, delta) {
+    const p = state.players[id];
+    p.poison = Math.max(0, p.poison + delta);
+
+    const countEl = document.getElementById('poison-' + id);
+    if (countEl) {
+      countEl.textContent = p.poison;
+      countEl.className = 'poison-count' + (p.poison >= 10 ? ' poisoned' : '');
+    }
+
+    const pipsEl = document.getElementById('poison-pips-' + id);
+    if (pipsEl) {
+      pipsEl.querySelectorAll('.poison-pip').forEach((pip, i) => {
+        pip.classList.toggle('filled', i < p.poison);
+      });
+    }
+
+    if (p.poison >= 10 && !p.eliminated) changeLife(id, -9999);
+  }
+
+  // ── COMMANDER DAMAGE ─────────────────────────────────────────
   function changeCmdrDmg(victimId, attackerId, delta) {
     const p = state.players[victimId];
     p.cmdDmg[attackerId] = Math.max(0, (p.cmdDmg[attackerId] || 0) + delta);
@@ -427,51 +466,71 @@
     if (p.cmdDmg[attackerId] >= 21 && !p.eliminated) changeLife(victimId, -9999);
   }
 
-  // ── DICE MODAL ─────────────────────────────────────────────────
-  function openDiceModal() {
+  // ── DICE MODAL ───────────────────────────────────────────────
+  function openDiceModal(playerIds) {
+    dicePool = playerIds;
     const modal = document.getElementById('dice-modal');
     const resultsEl = document.getElementById('dice-results');
     const winnerEl = document.getElementById('winner-announce');
     const rollBtn = document.getElementById('dice-roll-btn');
+    const titleEl = document.getElementById('dice-modal-title');
 
-    resultsEl.innerHTML = state.players.map(p => `
-      <div class="dice-row">
+    const isTieBreaker = playerIds.length < state.players.length;
+    titleEl.textContent = isTieBreaker ? 'Tiebreaker Roll' : 'Roll to Decide First Turn';
+
+    resultsEl.innerHTML = state.players.map(p => {
+      const inPool = playerIds.includes(p.id);
+      return `<div class="dice-row${inPool ? '' : ' dimmed'}" id="drow-${p.id}">
         <div class="dice-name" style="color:${COLORS[p.id].accent}">${escHtml(p.name)}</div>
-        <div class="dice-val" id="dv-${p.id}" style="color:${COLORS[p.id].accent}">—</div>
-      </div>`).join('');
+        <div class="dice-val" id="dv-${p.id}" style="color:${COLORS[p.id].accent}">${inPool ? '—' : '·'}</div>
+      </div>`;
+    }).join('');
+
     winnerEl.style.display = 'none';
-    rollBtn.textContent = 'Roll All';
+    rollBtn.textContent = isTieBreaker ? 'Roll Tiebreaker' : 'Roll All';
     modal.classList.add('open');
 
     rollBtn.onclick = () => {
       winnerEl.style.display = 'none';
       const rolls = {};
-      state.players.forEach(p => {
-        const el = document.getElementById('dv-' + p.id);
+
+      dicePool.forEach((pid, i) => {
+        const el = document.getElementById('dv-' + pid);
         const interval = setInterval(() => { el.textContent = Math.ceil(Math.random() * 20); }, 60);
         setTimeout(() => {
           clearInterval(interval);
-          rolls[p.id] = Math.ceil(Math.random() * 20);
-          el.textContent = rolls[p.id];
-        }, 600 + p.id * 80);
+          rolls[pid] = Math.ceil(Math.random() * 20);
+          el.textContent = rolls[pid];
+        }, 600 + i * 80);
       });
+
       setTimeout(() => {
-        let maxRoll = -1; let winners = [];
-        state.players.forEach(p => {
-          if (rolls[p.id] > maxRoll) { maxRoll = rolls[p.id]; winners = [p]; }
-          else if (rolls[p.id] === maxRoll) winners.push(p);
-        });
+        let maxRoll = -1;
+        dicePool.forEach(pid => { if (rolls[pid] > maxRoll) maxRoll = rolls[pid]; });
+        const winners = dicePool.filter(pid => rolls[pid] === maxRoll);
+
         winnerEl.style.display = 'block';
-        winnerEl.innerHTML = winners.length === 1
-          ? `<span style="color:${COLORS[winners[0].id].accent}">${escHtml(winners[0].name)}</span> goes first with a <strong>${maxRoll}</strong>!`
-          : `Tie! ${winners.map(w => `<span style="color:${COLORS[w.id].accent}">${escHtml(w.name)}</span>`).join(' & ')} rolled ${maxRoll}. Roll again!`;
-      }, 900 + state.players.length * 80);
+
+        if (winners.length === 1) {
+          const w = state.players[winners[0]];
+          winnerEl.innerHTML = `<span style="color:${COLORS[w.id].accent}">${escHtml(w.name)}</span> goes first with a <strong>${maxRoll}</strong>!`;
+          rollBtn.textContent = 'Roll Again';
+          rollBtn.onclick = () => openDiceModal(state.players.map(p => p.id));
+        } else {
+          const tiedNames = winners.map(pid =>
+            `<span style="color:${COLORS[pid].accent}">${escHtml(state.players[pid].name)}</span>`
+          ).join(' & ');
+          winnerEl.innerHTML = `Tie between ${tiedNames} with <strong>${maxRoll}</strong>! They roll again.`;
+          rollBtn.textContent = 'Roll Tiebreaker';
+          rollBtn.onclick = () => openDiceModal(winners);
+        }
+      }, 900 + dicePool.length * 80);
     };
 
     document.getElementById('dice-close-btn').onclick = () => modal.classList.remove('open');
   }
 
-  // ── INIT ───────────────────────────────────────────────────────
+  // ── INIT ─────────────────────────────────────────────────────
   initSetup();
 </script>
 </body>

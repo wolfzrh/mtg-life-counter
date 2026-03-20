@@ -27,18 +27,35 @@
     .color-dot { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.2); }
     input[type="text"] { background: #0e0e16; border: 1px solid #2a2218; border-radius: 6px; color: #e8dcc8; font-family: 'Crimson Pro', serif; font-size: 1rem; padding: 0.5rem 0.8rem; flex: 1; outline: none; min-height: 44px; }
     input[type="text"]:focus { border-color: #c9a84c; }
+    .time-row { display: flex; align-items: center; gap: 10px; margin-top: 0.5rem; }
+    .time-label { font-family: 'Cinzel', serif; font-size: 0.75rem; color: #7a6a50; white-space: nowrap; }
+    input[type="number"] { background: #0e0e16; border: 1px solid #2a2218; border-radius: 6px; color: #e8dcc8; font-family: 'Cinzel', serif; font-size: 1rem; padding: 0.5rem 0.8rem; width: 80px; outline: none; text-align: center; min-height: 44px; }
+    input[type="number"]:focus { border-color: #c9a84c; }
 
     /* ── GAME SCREEN ── */
     #screen-game { padding: 0; overflow: hidden; display: flex; flex-direction: column; height: 100%; }
 
-    .game-header { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.6rem; gap: 6px; flex-shrink: 0; border-bottom: 1px solid #1a1a22; }
+    .game-header { display: flex; justify-content: space-between; align-items: center; padding: 0.45rem 0.6rem; gap: 6px; flex-shrink: 0; border-bottom: 1px solid #1a1a22; }
     .game-title { font-family: 'Cinzel', serif; font-size: 0.85rem; color: #c9a84c; font-weight: 600; white-space: nowrap; }
     .header-btns { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
-    .icon-btn { background: #12121a; border: 1px solid #2a2218; border-radius: 6px; color: #7a6a50; font-family: 'Cinzel', serif; font-size: 0.6rem; padding: 0.35rem 0.55rem; cursor: pointer; letter-spacing: 0.04em; touch-action: manipulation; white-space: nowrap; min-height: 32px; display: flex; align-items: center; transition: all 0.15s; }
+    .icon-btn { background: #12121a; border: 1px solid #2a2218; border-radius: 6px; color: #7a6a50; font-family: 'Cinzel', serif; font-size: 0.6rem; padding: 0.35rem 0.55rem; cursor: pointer; letter-spacing: 0.04em; touch-action: manipulation; white-space: nowrap; min-height: 32px; display: flex; align-items: center; gap: 4px; transition: all 0.15s; }
     .icon-btn:hover, .icon-btn:active { border-color: #c9a84c; color: #c9a84c; }
     .icon-btn.danger:hover, .icon-btn.danger:active { border-color: #e05050; color: #e05050; }
+    .icon-btn.end-turn-btn { border-color: #4a8fff55; color: #4a8fff; background: #0a1020; }
+    .icon-btn.end-turn-btn:hover, .icon-btn.end-turn-btn:active { border-color: #4a8fff; color: #fff; background: #102040; }
 
-    .toggle-row { display: flex; gap: 5px; padding: 0.4rem 0.6rem; border-bottom: 1px solid #1a1a22; flex-shrink: 0; }
+    /* CLOCK BAR */
+    .clock-bar { flex-shrink: 0; border-bottom: 1px solid #1a1a22; padding: 0.35rem 0.6rem; display: flex; align-items: center; gap: 10px; }
+    .clock-player-name { font-family: 'Cinzel', serif; font-size: 0.7rem; font-weight: 600; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 30%; }
+    .clock-track { flex: 1; height: 4px; background: #1a1a22; border-radius: 2px; overflow: hidden; }
+    .clock-fill { height: 100%; border-radius: 2px; transition: width 0.9s linear, background-color 0.3s; }
+    .clock-display { font-family: 'Cinzel', serif; font-size: 1.3rem; font-weight: 900; letter-spacing: 0.05em; min-width: 52px; text-align: right; transition: color 0.3s; flex-shrink: 0; }
+    .clock-display.normal  { color: #c9a84c; }
+    .clock-display.warning { color: #f0a030; animation: pulse-warn 1s infinite; }
+    .clock-display.danger  { color: #e05050; animation: pulse-warn 0.5s infinite; }
+    @keyframes pulse-warn { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    .toggle-row { display: flex; gap: 5px; padding: 0.35rem 0.6rem; border-bottom: 1px solid #1a1a22; flex-shrink: 0; }
     .toggle-btn { font-family: 'Cinzel', serif; font-size: 0.58rem; font-weight: 600; letter-spacing: 0.08em; border: 1px solid #2a2218; border-radius: 20px; background: #12121a; color: #5a5050; padding: 0.3rem 0.7rem; cursor: pointer; touch-action: manipulation; transition: all 0.15s; text-transform: uppercase; }
     .toggle-btn.on { border-color: #c9a84c55; color: #c9a84c; background: #1a1500; }
     .toggle-btn.on.green { border-color: #a0d84055; color: #a0d840; background: #141a00; }
@@ -46,20 +63,23 @@
     .players-area { flex: 1; overflow: hidden; padding: 0.5rem; display: grid; gap: 5px; min-height: 0; }
 
     /* PLAYER CARD */
-    .player-card { border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); padding: 0.5rem 0.65rem; position: relative; overflow: hidden; display: flex; flex-direction: column; min-height: 0; }
+    .player-card { border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); padding: 0.5rem 0.65rem; position: relative; overflow: hidden; display: flex; flex-direction: column; min-height: 0; transition: border-color 0.3s, box-shadow 0.3s; }
     .player-card.eliminated { opacity: 0.5; }
+    .player-card.active-turn { box-shadow: 0 0 0 2px var(--active-accent); border-color: var(--active-accent) !important; }
     .player-card::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.45); z-index: 0; }
     .player-card > * { position: relative; z-index: 1; }
 
     .player-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.2rem; flex-shrink: 0; }
     .player-name { font-family: 'Cinzel', serif; font-size: clamp(0.65rem, 2.2vw, 0.85rem); font-weight: 600; text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
+    .player-badges { display: flex; gap: 4px; align-items: center; }
     .elim-badge { font-family: 'Cinzel', serif; font-size: 0.5rem; background: #3a0a0a; border: 1px solid #7a1a1a; color: #e05050; border-radius: 4px; padding: 1px 4px; }
+    .turn-badge { font-family: 'Cinzel', serif; font-size: 0.5rem; border-radius: 4px; padding: 1px 5px; letter-spacing: 0.06em; }
 
     .life-row { display: flex; align-items: center; justify-content: center; gap: clamp(6px, 2.5vw, 14px); flex: 1; min-height: 0; position: relative; }
     .life-btn { width: clamp(36px, 10vw, 48px); height: clamp(36px, 10vw, 48px); border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4); color: #fff; font-size: clamp(1.2rem, 4vw, 1.6rem); font-weight: 300; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; touch-action: manipulation; user-select: none; flex-shrink: 0; transition: background 0.1s; }
     .life-btn:active, .life-btn.held { background: rgba(255,255,255,0.22); }
     .life-number { font-family: 'Cinzel', serif; font-size: clamp(2rem, 8vw, 3rem); font-weight: 900; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.9); min-width: clamp(60px, 18vw, 95px); text-align: center; line-height: 1; }
-    .life-number.low { color: #e05050; animation: pulse-red 1.5s infinite; }
+    .life-number.low  { color: #e05050; animation: pulse-red 1.5s infinite; }
     .life-number.dead { color: #7a3a3a; }
     @keyframes pulse-red { 0%,100% { text-shadow: 0 2px 8px rgba(0,0,0,0.9); } 50% { text-shadow: 0 0 16px rgba(224,80,80,0.6); } }
     .delta-flash { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 600; opacity: 0; pointer-events: none; }
@@ -68,13 +88,11 @@
     .delta-positive { color: #5dca8a; }
     .delta-negative { color: #e05050; }
 
-    /* EXPANDABLE SECTIONS */
     .expand-section { overflow: hidden; transition: max-height 0.25s ease, opacity 0.2s ease, margin-top 0.2s; max-height: 0; opacity: 0; margin-top: 0; flex-shrink: 0; }
     .expand-section.open { max-height: 120px; opacity: 1; margin-top: 0.3rem; }
     .section-inner { padding-top: 0.35rem; border-top: 1px solid rgba(255,255,255,0.08); }
     .section-label { font-family: 'Cinzel', serif; font-size: 0.5rem; letter-spacing: 0.12em; color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 0.25rem; }
 
-    /* COMMANDER */
     .cmdr-row { display: flex; gap: 4px; flex-wrap: wrap; }
     .cmdr-chip { display: flex; align-items: center; gap: 2px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2px 5px 2px 4px; }
     .cmdr-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
@@ -82,7 +100,6 @@
     .cmdr-btn { width: 20px; height: 20px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.8); font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; touch-action: manipulation; }
     .cmdr-btn:active { background: rgba(255,255,255,0.22); }
 
-    /* POISON */
     .poison-row { display: flex; align-items: center; gap: 8px; }
     .poison-controls { display: flex; align-items: center; gap: 5px; }
     .poison-btn { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(180,230,80,0.3); background: rgba(0,0,0,0.4); color: rgba(180,230,80,0.8); font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; touch-action: manipulation; }
@@ -105,14 +122,14 @@
     .dice-row { display: flex; align-items: center; justify-content: space-between; background: #0e0e16; border-radius: 8px; padding: 0.5rem 1rem; border: 1px solid #2a2218; transition: opacity 0.3s; }
     .dice-row.dimmed { opacity: 0.3; }
     .dice-name { font-family: 'Cinzel', serif; font-size: 0.85rem; font-weight: 600; }
-    .dice-val { font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 900; }
+    .dice-val  { font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 900; }
     .winner-announce { text-align: center; font-family: 'Cinzel', serif; font-size: 0.9rem; color: #c9a84c; padding: 0.75rem; border: 1px solid #3a2e1e; border-radius: 8px; background: #1a1400; margin-bottom: 1rem; line-height: 1.5; }
     .step-btns { display: flex; gap: 8px; }
     .step-btn { flex: 1; font-family: 'Cinzel', serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em; border-radius: 8px; padding: 0.75rem; cursor: pointer; touch-action: manipulation; min-height: 48px; transition: all 0.15s; }
     .step-btn.secondary { background: transparent; border: 1px solid #3a2e1e; color: #7a6a50; }
     .step-btn.secondary:active { border-color: #c9a84c; color: #c9a84c; }
     .step-btn.primary { background: #1e1800; border: 1px solid #c9a84c; color: #c9a84c; }
-    .step-btn.danger { background: #1a0808; border: 1px solid #e05050; color: #e05050; }
+    .step-btn.danger  { background: #1a0808; border: 1px solid #e05050; color: #e05050; }
     .warn-icon { font-size: 2rem; text-align: center; margin-bottom: 0.7rem; }
     .warn-text { text-align: center; font-size: 0.95rem; color: #b09070; line-height: 1.6; margin-bottom: 1.2rem; font-style: italic; }
   </style>
@@ -125,6 +142,7 @@
   <div id="screen-setup" class="screen active">
     <h1>MTG</h1>
     <p class="subtitle">Life Counter</p>
+
     <div class="config-card">
       <div class="config-label">Number of Players</div>
       <div class="btn-group" id="player-count-btns">
@@ -137,6 +155,7 @@
         <button class="btn" data-val="8">8</button>
       </div>
     </div>
+
     <div class="config-card">
       <div class="config-label">Starting Life</div>
       <div class="btn-group" id="starting-life-btns">
@@ -144,10 +163,27 @@
         <button class="btn" data-val="40">40 — Commander</button>
       </div>
     </div>
+
+    <div class="config-card">
+      <div class="config-label">Turn Clock</div>
+      <div class="btn-group" id="clock-btns">
+        <button class="btn" data-val="0">Off</button>
+        <button class="btn" data-val="60">1 min</button>
+        <button class="btn selected" data-val="180">3 min</button>
+        <button class="btn" data-val="300">5 min</button>
+        <button class="btn" data-val="custom">Custom</button>
+      </div>
+      <div class="time-row" id="custom-time-row" style="display:none;">
+        <div class="time-label">Minutes:</div>
+        <input type="number" id="custom-minutes" min="1" max="60" value="3" />
+      </div>
+    </div>
+
     <div class="config-card">
       <div class="config-label">Player Names</div>
       <div id="name-inputs"></div>
     </div>
+
     <button class="btn-primary" id="start-btn">Begin the Battle</button>
   </div>
 
@@ -156,10 +192,16 @@
     <div class="game-header">
       <div class="game-title">⚔ Arena</div>
       <div class="header-btns">
+        <button class="icon-btn end-turn-btn" id="end-turn-btn" style="display:none;">End Turn ▶</button>
         <button class="icon-btn" id="dice-btn">Roll Dice</button>
         <button class="icon-btn" id="reset-btn">Reset</button>
         <button class="icon-btn danger" id="end-btn">End Game</button>
       </div>
+    </div>
+    <div class="clock-bar" id="clock-bar" style="display:none;">
+      <div class="clock-player-name" id="clock-player-name">—</div>
+      <div class="clock-track"><div class="clock-fill" id="clock-fill" style="width:100%;background:#c9a84c;"></div></div>
+      <div class="clock-display normal" id="clock-display">3:00</div>
     </div>
     <div class="toggle-row">
       <button class="toggle-btn" id="toggle-cmdr">Cmd Dmg</button>
@@ -208,12 +250,16 @@
     { bg: '#252018', accent: '#f09050' }
   ];
 
-  let cfg = { players: 2, life: 20 };
+  let cfg = { players: 2, life: 20, turnSeconds: 180 };
   let state = { players: [] };
   let ui = { showCmdr: false, showPoison: false };
   let confirmCallback = null;
   let dicePool = [];
 
+  // clock state
+  let clock = { active: false, currentPlayer: 0, remaining: 0, total: 0, intervalId: null };
+
+  // hold-to-repeat
   const holdState = {};
   let holdCounter = 0;
 
@@ -228,21 +274,13 @@
     const id = btn.dataset.holdId;
     stopHold(id);
     btn.classList.add('held');
-
-    // Immediate first tick on press
     onTick(1);
-
-    // Phase 1: step 1 every 500ms
     const phase1 = setInterval(() => onTick(1), 500);
-
-    // After 5s: switch to step 10 every 500ms
     const switchTimer = setTimeout(() => {
       clearInterval(phase1);
       if (!holdState[id]) return;
-      const phase2 = setInterval(() => onTick(10), 500);
-      holdState[id].intervalId = phase2;
+      holdState[id].intervalId = setInterval(() => onTick(10), 500);
     }, 5000);
-
     holdState[id] = { intervalId: phase1, timeoutId: switchTimer, btn };
   }
 
@@ -258,17 +296,15 @@
   function attachHold(btn, onTick) {
     const id = 'h' + (holdCounter++);
     btn.dataset.holdId = id;
-
     btn.addEventListener('touchstart', e => { e.preventDefault(); startHold(btn, onTick); }, { passive: false });
     btn.addEventListener('touchend',    () => stopHold(id));
     btn.addEventListener('touchcancel', () => stopHold(id));
-
     btn.addEventListener('mousedown', e => { e.preventDefault(); startHold(btn, onTick); });
     btn.addEventListener('mouseup',   () => stopHold(id));
     btn.addEventListener('mouseleave',() => stopHold(id));
   }
 
-  // ── CONFIRM MODAL ────────────────────────────────────────────
+  // ── CONFIRM ──────────────────────────────────────────────────
   function showConfirm({ icon, title, titleColor, text, okLabel, okClass, onOk }) {
     document.getElementById('confirm-icon').textContent = icon;
     document.getElementById('confirm-title').textContent = title;
@@ -306,13 +342,30 @@
         cfg.life = parseInt(b.dataset.val);
       };
     });
+    document.querySelectorAll('#clock-btns .btn').forEach(b => {
+      b.onclick = () => {
+        document.querySelectorAll('#clock-btns .btn').forEach(x => x.classList.remove('selected'));
+        b.classList.add('selected');
+        const customRow = document.getElementById('custom-time-row');
+        if (b.dataset.val === 'custom') {
+          customRow.style.display = 'flex';
+          cfg.turnSeconds = Math.max(1, parseInt(document.getElementById('custom-minutes').value) || 3) * 60;
+        } else {
+          customRow.style.display = 'none';
+          cfg.turnSeconds = parseInt(b.dataset.val);
+        }
+      };
+    });
+    document.getElementById('custom-minutes').oninput = e => {
+      cfg.turnSeconds = Math.max(1, parseInt(e.target.value) || 1) * 60;
+    };
     document.getElementById('start-btn').onclick = startGame;
     renderNameInputs();
   }
 
   function renderNameInputs() {
     const container = document.getElementById('name-inputs');
-    const current = Array.from(container.querySelectorAll('input')).map(i => i.value);
+    const current = Array.from(container.querySelectorAll('input[type="text"]')).map(i => i.value);
     container.innerHTML = '';
     for (let i = 0; i < cfg.players; i++) {
       const row = document.createElement('div');
@@ -330,9 +383,107 @@
     }
   }
 
+  // ── CLOCK ────────────────────────────────────────────────────
+  function fmtTime(s) {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return m + ':' + String(sec).padStart(2, '0');
+  }
+
+  function startClockFor(playerIdx) {
+    if (clock.intervalId) clearInterval(clock.intervalId);
+    clock.active = true;
+    clock.currentPlayer = playerIdx;
+    clock.remaining = cfg.turnSeconds;
+    clock.total = cfg.turnSeconds;
+    updateClockUI();
+    clock.intervalId = setInterval(() => {
+      clock.remaining--;
+      updateClockUI();
+      if (clock.remaining <= 0) {
+        clearInterval(clock.intervalId);
+        clock.intervalId = null;
+        buzzTimeUp();
+      }
+    }, 1000);
+  }
+
+  function updateClockUI() {
+    const p = state.players[clock.currentPlayer];
+    const col = COLORS[p.id];
+    const ratio = clock.remaining / clock.total;
+    const pct = Math.max(0, ratio * 100).toFixed(1);
+
+    document.getElementById('clock-player-name').textContent = p.name;
+    document.getElementById('clock-player-name').style.color = col.accent;
+
+    const disp = document.getElementById('clock-display');
+    disp.textContent = fmtTime(Math.max(0, clock.remaining));
+
+    let fillColor, dispClass;
+    if (ratio > 0.4)      { fillColor = col.accent; dispClass = 'normal'; }
+    else if (ratio > 0.2) { fillColor = '#f0a030';  dispClass = 'warning'; }
+    else                  { fillColor = '#e05050';  dispClass = 'danger'; }
+
+    disp.className = 'clock-display ' + dispClass;
+    const fill = document.getElementById('clock-fill');
+    fill.style.width = pct + '%';
+    fill.style.backgroundColor = fillColor;
+  }
+
+  function buzzTimeUp() {
+    const disp = document.getElementById('clock-display');
+    disp.textContent = 'TIME';
+    disp.className = 'clock-display danger';
+    if (navigator.vibrate) navigator.vibrate([300, 100, 300, 100, 300]);
+  }
+
+  function stopClock() {
+    if (clock.intervalId) clearInterval(clock.intervalId);
+    clock.intervalId = null;
+    clock.active = false;
+  }
+
+  function advanceTurn() {
+    if (!cfg.turnSeconds) return;
+    const n = state.players.length;
+    let next = (clock.currentPlayer + 1) % n;
+    let tries = 0;
+    while (state.players[next].eliminated && tries < n) {
+      next = (next + 1) % n;
+      tries++;
+    }
+    updateActiveTurnCard(next);
+    startClockFor(next);
+  }
+
+  function updateActiveTurnCard(activeIdx) {
+    state.players.forEach((p, i) => {
+      const card = document.getElementById('pcard-' + p.id);
+      if (!card) return;
+      if (i === activeIdx) {
+        card.classList.add('active-turn');
+        card.style.setProperty('--active-accent', COLORS[p.id].accent);
+        const badges = card.querySelector('.player-badges');
+        if (badges && !badges.querySelector('.turn-badge')) {
+          const tb = document.createElement('div');
+          tb.className = 'turn-badge';
+          tb.textContent = 'TURN';
+          tb.style.background = COLORS[p.id].accent + '33';
+          tb.style.border = '1px solid ' + COLORS[p.id].accent + '88';
+          tb.style.color = COLORS[p.id].accent;
+          badges.appendChild(tb);
+        }
+      } else {
+        card.classList.remove('active-turn');
+        card.querySelector('.turn-badge')?.remove();
+      }
+    });
+  }
+
   // ── GAME ─────────────────────────────────────────────────────
   function startGame() {
-    const inputs = document.querySelectorAll('#name-inputs input');
+    const inputs = document.querySelectorAll('#name-inputs input[type="text"]');
     state.players = Array.from({ length: cfg.players }, (_, i) => ({
       id: i,
       name: inputs[i]?.value.trim() || ('Player ' + (i + 1)),
@@ -355,9 +506,21 @@
     const tP = document.getElementById('toggle-poison');
     tC.classList.remove('on');
     tP.classList.remove('on');
-
     tC.onclick = () => { ui.showCmdr = !ui.showCmdr; tC.classList.toggle('on', ui.showCmdr); updateExpandSections(); };
     tP.onclick = () => { ui.showPoison = !ui.showPoison; tP.classList.toggle('on', ui.showPoison); updateExpandSections(); };
+
+    const clockBar   = document.getElementById('clock-bar');
+    const endTurnBtn = document.getElementById('end-turn-btn');
+    if (cfg.turnSeconds > 0) {
+      clockBar.style.display = 'flex';
+      endTurnBtn.style.display = 'flex';
+      clock.currentPlayer = 0;
+      startClockFor(0);
+      endTurnBtn.onclick = advanceTurn;
+    } else {
+      clockBar.style.display = 'none';
+      endTurnBtn.style.display = 'none';
+    }
 
     document.getElementById('dice-btn').onclick = () => openDiceModal(state.players.map(p => p.id));
 
@@ -371,6 +534,10 @@
           Object.keys(p.cmdDmg).forEach(k => p.cmdDmg[k] = 0);
         });
         renderGame();
+        if (cfg.turnSeconds > 0) {
+          updateActiveTurnCard(clock.currentPlayer);
+          startClockFor(clock.currentPlayer);
+        }
       }
     });
 
@@ -381,15 +548,19 @@
     });
 
     renderGame();
+    if (cfg.turnSeconds > 0) updateActiveTurnCard(0);
   }
 
   function endGame() {
+    stopClock();
     state.players = [];
-    cfg = { players: 2, life: 20 };
+    cfg = { players: 2, life: 20, turnSeconds: 180 };
     document.getElementById('screen-game').classList.remove('active');
     document.getElementById('screen-setup').classList.add('active');
     document.querySelectorAll('#player-count-btns .btn').forEach(b => b.classList.toggle('selected', b.dataset.val === '2'));
     document.querySelectorAll('#starting-life-btns .btn').forEach(b => b.classList.toggle('selected', b.dataset.val === '20'));
+    document.querySelectorAll('#clock-btns .btn').forEach(b => b.classList.toggle('selected', b.dataset.val === '180'));
+    document.getElementById('custom-time-row').style.display = 'none';
     renderNameInputs();
   }
 
@@ -401,7 +572,7 @@
     return { cols: '1fr 1fr', rows: 'repeat(4, 1fr)' };
   }
 
-  // ── RENDER GAME ──────────────────────────────────────────────
+  // ── RENDER ───────────────────────────────────────────────────
   function renderGame() {
     const grid = document.getElementById('players-grid');
     const gs = getGridStyle(state.players.length);
@@ -409,19 +580,24 @@
     grid.style.gridTemplateRows = gs.rows;
     grid.innerHTML = '';
 
-    state.players.forEach(p => {
+    state.players.forEach((p, idx) => {
       const col = COLORS[p.id];
+      const isActive = cfg.turnSeconds > 0 && clock.currentPlayer === idx;
       const card = document.createElement('div');
-      card.className = 'player-card' + (p.eliminated ? ' eliminated' : '');
+      card.className = 'player-card' + (p.eliminated ? ' eliminated' : '') + (isActive ? ' active-turn' : '');
       card.id = 'pcard-' + p.id;
       card.style.background = col.bg;
       card.style.borderColor = col.accent + '44';
+      if (isActive) card.style.setProperty('--active-accent', col.accent);
       const isLow = !p.eliminated && p.life > 0 && p.life <= Math.floor(p.startingLife * 0.25);
 
       card.innerHTML = `
         <div class="player-top">
           <div class="player-name" style="color:${col.accent}">${escHtml(p.name)}</div>
-          ${p.eliminated ? '<div class="elim-badge">OUT</div>' : ''}
+          <div class="player-badges">
+            ${isActive ? `<div class="turn-badge" style="background:${col.accent}33;border:1px solid ${col.accent}88;color:${col.accent}">TURN</div>` : ''}
+            ${p.eliminated ? '<div class="elim-badge">OUT</div>' : ''}
+          </div>
         </div>
         <div class="life-row">
           <button class="life-btn" id="lbtn-minus-${p.id}" style="border-color:${col.accent}66">−</button>
@@ -443,7 +619,6 @@
       attachHold(document.getElementById('lbtn-minus-' + p.id), step => changeLife(p.id, -step));
       attachHold(document.getElementById('lbtn-plus-'  + p.id), step => changeLife(p.id, +step));
     });
-
     grid.querySelectorAll('.cmdr-btn').forEach(b => b.onclick = () => changeCmdrDmg(+b.dataset.victim, +b.dataset.attacker, +b.dataset.delta));
     grid.querySelectorAll('.poison-btn').forEach(b => b.onclick = () => changePoison(+b.dataset.id, +b.dataset.delta));
   }
@@ -473,8 +648,8 @@
   function renderPoisonInner(p) {
     const lethal = p.poison >= 10;
     const pips = Array.from({ length: 10 }, (_, i) => {
-      const filled = i < p.poison;
-      return `<div class="poison-pip${filled ? ' filled' : ''}${filled && lethal ? ' lethal' : ''}"></div>`;
+      const f = i < p.poison;
+      return `<div class="poison-pip${f ? ' filled' : ''}${f && lethal ? ' lethal' : ''}"></div>`;
     }).join('');
     return `<div class="section-inner">
       <div class="section-label">Poison</div>
@@ -493,15 +668,12 @@
   function changeLife(id, delta) {
     const p = state.players[id];
     p.life += delta;
-
     const el = document.getElementById('life-' + id);
     if (el) {
       el.textContent = p.life;
       const isLow = !p.eliminated && p.life > 0 && p.life <= Math.floor(p.startingLife * 0.25);
       el.className = 'life-number' + (isLow ? ' low' : '') + (p.life <= 0 ? ' dead' : '');
     }
-
-    // Show delta flash only for single steps
     if (Math.abs(delta) <= 1) {
       const de = document.getElementById('delta-' + id);
       if (de) {
@@ -512,7 +684,6 @@
         setTimeout(() => de.classList.remove('show'), 1200);
       }
     }
-
     if (p.life <= 0 && !p.eliminated) {
       p.eliminated = true;
       document.getElementById('pcard-' + id)?.classList.add('eliminated');
@@ -533,18 +704,12 @@
     const p = state.players[id];
     p.poison = Math.max(0, Math.min(10, p.poison + delta));
     const lethal = p.poison >= 10;
-
     const el = document.getElementById('poison-' + id);
     if (el) { el.textContent = p.poison; el.className = 'poison-count' + (lethal ? ' poisoned' : ''); }
-
-    const pipsEl = document.getElementById('poison-pips-' + id);
-    if (pipsEl) {
-      pipsEl.querySelectorAll('.poison-pip').forEach((pip, i) => {
-        const filled = i < p.poison;
-        pip.className = 'poison-pip' + (filled ? ' filled' : '') + (filled && lethal ? ' lethal' : '');
-      });
-    }
-
+    document.getElementById('poison-pips-' + id)?.querySelectorAll('.poison-pip').forEach((pip, i) => {
+      const f = i < p.poison;
+      pip.className = 'poison-pip' + (f ? ' filled' : '') + (f && lethal ? ' lethal' : '');
+    });
     if (lethal && !p.eliminated) {
       p.eliminated = true;
       document.getElementById('pcard-' + id)?.classList.add('eliminated');
@@ -553,7 +718,6 @@
         const b = document.createElement('div'); b.className = 'elim-badge'; b.textContent = 'OUT'; top.appendChild(b);
       }
     }
-
     if (!lethal && p.eliminated && p.life > 0) {
       p.eliminated = false;
       document.getElementById('pcard-' + id)?.classList.remove('eliminated');
@@ -561,7 +725,7 @@
     }
   }
 
-  // ── COMMANDER DAMAGE ─────────────────────────────────────────
+  // ── COMMANDER ────────────────────────────────────────────────
   function changeCmdrDmg(vId, aId, delta) {
     const p = state.players[vId];
     p.cmdDmg[aId] = Math.max(0, (p.cmdDmg[aId] || 0) + delta);
@@ -570,12 +734,11 @@
     if (p.cmdDmg[aId] >= 21 && !p.eliminated) changeLife(vId, -9999);
   }
 
-  // ── DICE MODAL ───────────────────────────────────────────────
+  // ── DICE ─────────────────────────────────────────────────────
   function openDiceModal(playerIds) {
     dicePool = playerIds;
     const isTie = playerIds.length < state.players.length;
     document.getElementById('dice-modal-title').textContent = isTie ? 'Tiebreaker Roll' : 'Roll to Decide First Turn';
-
     document.getElementById('dice-results').innerHTML = state.players.map(p => {
       const inPool = playerIds.includes(p.id);
       return `<div class="dice-row${inPool ? '' : ' dimmed'}">
@@ -606,6 +769,11 @@
         if (winners.length === 1) {
           const w = state.players[winners[0]];
           winnerEl.innerHTML = `<span style="color:${COLORS[w.id].accent}">${escHtml(w.name)}</span> goes first with a <strong>${max}</strong>!`;
+          if (cfg.turnSeconds > 0) {
+            clock.currentPlayer = winners[0];
+            updateActiveTurnCard(winners[0]);
+            startClockFor(winners[0]);
+          }
           rollBtn.textContent = 'Roll Again';
           rollBtn.onclick = () => openDiceModal(state.players.map(p => p.id));
         } else {
